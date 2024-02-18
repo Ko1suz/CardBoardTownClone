@@ -38,27 +38,31 @@ public class Grid
         this.itsThreeD = itsThreeD;
 
         gridArray = new int[widht, height];
-        debugTextArray = new TextMesh[widht, height];
-        for (int x = 0; x < gridArray.GetLength(0); x++)
+        bool showDebug = true;
+        if (showDebug)
         {
-            for (int y = 0; y < gridArray.GetLength(1); y++)
+            debugTextArray = new TextMesh[widht, height];
+            for (int x = 0; x < gridArray.GetLength(0); x++)
             {
-                debugTextArray[x,y] = UtilsClass.CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize,cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter);
-                Debug.DrawLine(GetWorldPosition(x,y), GetWorldPosition(x, y + 1), Color.green, 100f);
-                Debug.DrawLine(GetWorldPosition(x,y), GetWorldPosition(x + 1, y), Color.green, 100f);
+                for (int y = 0; y < gridArray.GetLength(1); y++)
+                {
+                    debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter);
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.green, 100f);
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.green, 100f);
+                }
             }
-        }
-        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(widht, height), Color.green, 100f);
-        Debug.DrawLine(GetWorldPosition(widht, 0), GetWorldPosition(widht, height), Color.green, 100f);
+            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(widht, height), Color.green, 100f);
+            Debug.DrawLine(GetWorldPosition(widht, 0), GetWorldPosition(widht, height), Color.green, 100f);
 
-        //SetValue(2,1,56);
-        OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) =>
-        {
-            debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y].ToString();
-        };
+            OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) =>
+            {
+                debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y].ToString();
+            };
+        }
+       
     }
 
-    private Vector3 GetWorldPosition(int x, int y)
+    public Vector3 GetWorldPosition(int x, int y)
     {
         // b = a != null ? a.Value : yeet(b);
         return itsThreeD == false ?  new Vector3(x, y) * cellSize + originPosition : new Vector3(y, 0, x) * cellSize + originPosition; // new Vector3(x, 0, y) * cellSize
@@ -85,6 +89,10 @@ public class Grid
         GetXY(worldPosition, out x, out y);
         SetValue(x, y, value);
     }
+    public void AddValue(int x, int y, int value)
+    {
+        SetValue(x, y, GetValue(x, y) + value);
+    }
 
     public int GetValue(int x, int y)
     {
@@ -103,6 +111,37 @@ public class Grid
         int x, y;
         GetXY(worldPosition, out x, out y);
         return GetValue(x, y);
+    }
+
+    public void AddValue(Vector3 worldPosition, int value, int fullValueRange, int totalRange)
+    {
+        int lowerValueAmount = Mathf.RoundToInt((float)value / (totalRange - fullValueRange));
+
+        GetXY(worldPosition, out int originX, out int originY);
+        for (int x = 0; x < totalRange; x++)
+        {
+            for (int y = 0; y < totalRange - x; y++)
+            {
+                int radius = x + y;
+                int addValueAmount = value;
+                if (radius > fullValueRange)
+                {
+                    addValueAmount -= lowerValueAmount * (radius - fullValueRange);
+                }
+
+                AddValue(originX + x, originY + y, addValueAmount);
+                if (x != 0 )
+                { AddValue(originX - x, originY + y, addValueAmount); }
+
+                if(y != 0)
+                {
+                    AddValue(originX + x, originY - y, addValueAmount);
+                    if (x != 0)
+                    { AddValue(originX - x, originY - y, addValueAmount); }
+                }
+                
+            }
+        }
     }
 
 
