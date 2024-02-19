@@ -6,11 +6,14 @@ using CodeMonkey.Utils;
 public class Testing : MonoBehaviour
 {
     [SerializeField] private HeatMapVisual heatMapVisual;
-    private Grid grid;
+    [SerializeField] private HeatMapBoolVisual heatMapBoolVisual;
+    private Grid<HeatMapGridObject> grid;
     private void Start()
     {
-        grid = new Grid(100,100, 4f, new Vector3(-200,-200), false);
-        heatMapVisual.SetGrid(grid);
+        grid = new Grid<HeatMapGridObject>
+            (10, 10, 10f, new Vector3(-50, -50), (Grid<HeatMapGridObject> g, int x, int y) => new HeatMapGridObject(g, x, y), false);
+        //heatMapVisual.SetGrid(grid);
+        //heatMapBoolVisual.SetGrid(grid);
     }
 
     private void Update()
@@ -18,20 +21,48 @@ public class Testing : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 position = UtilsClass.GetMouseWorldPosition();
-            grid.AddValue(position, 100, 5, 20);
+
+            HeatMapGridObject heatMapGridObject = grid.GetGridObject(position);
+            if (heatMapGridObject != null)
+            {
+                heatMapGridObject.AddValue(5);
+            }
+
+            //grid.SetValue(position, true);
+            //grid.AddValue(position, 100, 5, 20);
         }
     }
+}
 
-    void ChangeText()
+public class HeatMapGridObject
+{
+    private const int MIN = 0;
+    private const int MAX = 100;
+    public int x;
+    public int y;
+    public int value;
+    private Grid<HeatMapGridObject> grid;
+    public HeatMapGridObject(Grid<HeatMapGridObject> grid, int x, int y)
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            grid.SetValue(UtilsClass.GetMouseWorldPosition(), 56);
-        }
+        this.grid = grid;
+        this.x = x;
+        this.y = y;
+    }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            Debug.Log(grid.GetValue(UtilsClass.GetMouseWorldPosition()));
-        }
+    public void AddValue(int addValue)
+    {
+        this.value += addValue;
+        value = Mathf.Clamp(value, MIN, MAX);
+        grid.TriggerGridObjectChanged(x, y);
+    }
+
+    public float GetValueNormalized()
+    {
+        return (float)value / MAX;
+    }
+
+    public override string ToString()
+    {
+        return value.ToString();
     }
 }
