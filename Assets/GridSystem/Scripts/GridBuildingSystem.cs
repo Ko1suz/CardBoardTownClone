@@ -7,26 +7,26 @@ using UnityEngine;
 public class GridBuildingSystem : MonoBehaviour
 {
     [SerializeField] private Transform testTransform;
-    private GridXZ<GridObject> grid;
+    private GridXZ<GridObjectTesting> grid;
 
     private void Awake()
     {
         int gridWidht = 10;
         int gridHeight = 10;
         float cellSize = 10;
-        grid = new GridXZ<GridObject>(gridWidht, gridHeight, cellSize, Vector3.zero, (GridXZ<GridObject> g, int x, int z) => new GridObject(g,x,z, testTransform));
+        grid = new GridXZ<GridObjectTesting>(gridWidht, gridHeight, cellSize, Vector3.zero, (GridXZ<GridObjectTesting> g, int x, int z) => new GridObjectTesting(g,x,z, testTransform));
     }
 
    
 }
 
-public class GridObject
+public class GridObjectTesting
 {
-    private GridXZ<GridObject> grid;
+    private GridXZ<GridObjectTesting> grid;
     private int x;
     private int z;
     private Transform testTransform;
-    public GridObject(GridXZ<GridObject> grid, int x, int z, Transform testTransform)
+    public GridObjectTesting(GridXZ<GridObjectTesting> grid, int x, int z, Transform testTransform)
     {
         this.grid = grid;
         this.x = x;

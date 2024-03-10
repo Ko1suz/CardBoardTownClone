@@ -6,7 +6,7 @@ public class MyGridBuildSystem : MonoBehaviour
 {
 
     [SerializeField] private Transform testTransform;
-    private My_XZ_Grid<GridObject> grid;
+    private My_XZ_Grid<GridObjectTesting> grid;
 
     private void Awake()
     {
