@@ -4,67 +4,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class My_XZ_Grid<TGridObject> : MonoBehaviour
+public class My_XZ_Grid : MonoBehaviour
 {
-    private int width;
-    private int height;
-    private float cellSize;
-    private Vector3 originPosition;
-    private TGridObject[,] gridArray;
+    [SerializeField] private GameObject gridPrefab;
+    [SerializeField] private int x_axis_length;
+    //private int y_axis_length;
+    [SerializeField] private int z_axis_length;
+    [SerializeField] private float cellSize;
+    [SerializeField] private Vector3 originPosition;
+    [SerializeField] private GameObject[,] gridArray;
 
-
-    public My_XZ_Grid(TGridObject gridObject, int width, int height, float cellSize, Vector3 originPosition)
+    private void Start()
     {
-        this.width = width;
-        this.height = height;
+        CreateGrid(gridPrefab, x_axis_length, z_axis_length, cellSize, originPosition);
+    }
+    public void CreateGrid(GameObject gridPrefab, int x_axis_lenght, int z_axis_length, float cellSize, Vector3 originPosition)
+    {
+        this.gridPrefab = gridPrefab;
+        this.x_axis_length = x_axis_lenght;
+        this.z_axis_length = z_axis_length;
         this.cellSize = cellSize;
         this.originPosition = originPosition;
 
-        gridArray = new TGridObject[width, height];
-
-        bool showDebug = true;
-        if (showDebug)
+        gridArray = new GameObject[x_axis_length, z_axis_length];
+        for (int x = 0; x < gridArray.GetLength(0); x++)
         {
-            TextMesh[,] debugTextArray = new TextMesh[width, height];
-
-            for (int x = 0; x < gridArray.GetLength(0); x++)
+            for (int z = 0; z < gridArray.GetLength(1); z++)
             {
-                for (int z = 0; z < gridArray.GetLength(1); z++)
+                GameObject cloneGrid = Instantiate(this.gridPrefab);
+                cloneGrid.gameObject.SetActive(false);
+                gridArray[x, z] = cloneGrid;
+                cloneGrid.transform.parent = this.transform;
+                if (z%2 == 0 )
                 {
-                    debugTextArray[x, z] = UtilsClass.CreateWorldText(gridArray[x, z]?.ToString(), null, GetWorldPosition(x, z) + new Vector3(cellSize, 0, cellSize) * .5f, 15, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
-                    Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x, z + 1), Color.white, 100f);
-                    Debug.DrawLine(GetWorldPosition(x, z), GetWorldPosition(x + 1, z), Color.white, 100f);
+                    cloneGrid.GetComponent<GridObject>().Shape = BaseGridObject._shape.Square;
+                    cloneGrid.GetComponent<GridObject>().GridSize = 1 * cellSize;
+                    cloneGrid.transform.localPosition = new Vector3(x * 4, 0, z * 2);
                 }
+                else
+                {
+                    cloneGrid.GetComponent<GridObject>().Shape = BaseGridObject._shape.Octagon;
+                    cloneGrid.GetComponent<GridObject>().GridSize = 2 * cellSize;
+                    cloneGrid.transform.localPosition = new Vector3((x * 4) + 2, 0, (z *2));
+                }
+                cloneGrid.SetActive(true);
             }
-            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
-            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
         }
-
     }
 
-    public int GetWidth()
-    {
-        return width;
-    }
 
-    public int GetHeight()
-    {
-        return height;
-    }
-
-    public float GetCellSize()
-    {
-        return cellSize;
-    }
-
-    public Vector3 GetWorldPosition(int x, int z)
-    {
-        return new Vector3(x, 0, z) * cellSize + originPosition;
-    }
-
-    public void GetXZ(Vector3 worldPosition, out int x, out int z)
-    {
-        x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
-        z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
-    }
 }

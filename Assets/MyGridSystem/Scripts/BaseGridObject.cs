@@ -12,7 +12,7 @@ public class BaseGridObject : MonoBehaviour
         ZAxis
     }
     [SerializeField] _axis axis = new _axis();
-    public enum _initiator
+    public enum _shape
     {
         Triangle,
         Square,
@@ -21,10 +21,10 @@ public class BaseGridObject : MonoBehaviour
         Heptagon,
         Octagon,
     }
-    [SerializeField] protected _initiator initiator = new _initiator();
+    [SerializeField] protected _shape shape = new _shape();
 
-    protected int _initiatorPointAmount;
-    private Vector3[] _initiatorPoints;
+    protected int _shapePointAmount;
+    private Vector3[] _shapePoints;
     private Vector3 _rotateVector;
     private Vector3 _rotateAxis;
     private float _initialRotation;
@@ -32,66 +32,77 @@ public class BaseGridObject : MonoBehaviour
 
     protected Vector3[] _positions;
 
-    protected void Awake()
+    public _shape Shape { get => shape; set => shape = value; }
+    public float GridSize { get => gridSize; set => gridSize = value; }
+
+    private void OnEnable()
     {
         SetInitiatorPointAmount();
-        _positions = new Vector3[_initiatorPointAmount + 1];
+        _positions = new Vector3[_shapePointAmount + 1];
 
         _rotateVector = Quaternion.AngleAxis(_initialRotation, _rotateAxis) * _rotateVector;
-        for (int i = 0; i < _initiatorPointAmount; i++)
+        for (int i = 0; i < _shapePointAmount; i++)
         {
             _positions[i] = _rotateVector * gridSize;
-            _rotateVector = Quaternion.AngleAxis(360 / _initiatorPointAmount, _rotateAxis) * _rotateVector;
+            _rotateVector = Quaternion.AngleAxis(360 / _shapePointAmount, _rotateAxis) * _rotateVector;
         }
-        _positions[_initiatorPointAmount] = _positions[0];
+        _positions[_shapePointAmount] = _positions[0];
     }
 
-    protected void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (showDebug)
         {
-            for (int i = 0; i < _initiatorPointAmount; i++)
+            SetInitiatorPointAmount();
+            _shapePoints = new Vector3[_shapePointAmount + 1];
+            _rotateVector = Quaternion.AngleAxis(_initialRotation, _rotateAxis) * _rotateVector;
+            for (int i = 0; i < _shapePointAmount; i++)
+            {
+                _shapePoints[i] = _rotateVector * gridSize;
+                _rotateVector = Quaternion.AngleAxis(360 / _shapePointAmount, _rotateAxis) * _rotateVector;
+            }
+            for (int i = 0; i < _shapePointAmount; i++)
             {
                 Gizmos.color = Color.white;
                 Matrix4x4 rotatinMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
                 Gizmos.matrix = rotatinMatrix;
-                if (i < _initiatorPointAmount - 1)
+                if (i < _shapePointAmount - 1)
                 {
-                    Gizmos.DrawLine(_initiatorPoints[i], _initiatorPoints[i + 1]);
+                    Gizmos.DrawLine(_shapePoints[i], _shapePoints[i + 1]);
                 }
                 else
                 {
-                    Gizmos.DrawLine(_initiatorPoints[i], _initiatorPoints[0]);
+                    Gizmos.DrawLine(_shapePoints[i], _shapePoints[0]);
                 }
             }
         }
     }
     public void SetInitiatorPointAmount()
     {
-        switch (initiator)
+        switch (shape)
         {
-            case _initiator.Triangle:
-                _initiatorPointAmount = 3;
+            case _shape.Triangle:
+                _shapePointAmount = 3;
                 _initialRotation = 0;
                 break;
-            case _initiator.Square:
-                _initiatorPointAmount = 4;
-                _initialRotation = 45;
+            case _shape.Square:
+                _shapePointAmount = 4;
+                _initialRotation = 0; //45
                 break;
-            case _initiator.Pentagon:
-                _initiatorPointAmount = 5;
+            case _shape.Pentagon:
+                _shapePointAmount = 5;
                 _initialRotation = 36;
                 break;
-            case _initiator.Hexagon:
-                _initiatorPointAmount = 6;
+            case _shape.Hexagon:
+                _shapePointAmount = 6;
                 _initialRotation = 30;
                 break;
-            case _initiator.Heptagon:
-                _initiatorPointAmount = 7;
+            case _shape.Heptagon:
+                _shapePointAmount = 7;
                 _initialRotation = 25.7148f;
                 break;
-            case _initiator.Octagon:
-                _initiatorPointAmount = 8;
+            case _shape.Octagon:
+                _shapePointAmount = 8;
                 _initialRotation = 22.5f;
                 break;
             default:
