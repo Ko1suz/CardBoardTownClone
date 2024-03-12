@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8520736599498174140}
-  - component: {fileID: 4191606444191693744}
+  - component: {fileID: 18270181774920631}
   - component: {fileID: 138763713885290951}
   m_Layer: 0
   m_Name: Grid
@@ -25,15 +25,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 242980820195632991}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4191606444191693744
+--- !u!114 &18270181774920631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,13 +42,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 242980820195632991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc5fd9a258d0ce24689fc2a0f603bef5, type: 3}
+  m_Script: {fileID: 11500000, guid: a8e05143abd929c41bb10fb069db7bc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   showDebug: 1
   axis: 2
   shape: 5
-  gridSize: 4
+  gridSize: 2
 --- !u!120 &138763713885290951
 LineRenderer:
   serializedVersion: 2
@@ -101,8 +101,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.1
+        time: 0.002986908
+        value: 0.106759645
         inSlope: 0
         outSlope: 0
         tangentMode: 0

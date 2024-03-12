@@ -8,7 +8,7 @@ public class My_XZ_Grid : MonoBehaviour
 {
     [SerializeField] private GameObject gridPrefab;
     [SerializeField] private int x_axis_length;
-    //private int y_axis_length;
+    [SerializeField] private int y_axis_length;
     [SerializeField] private int z_axis_length;
     [SerializeField] private float cellSize;
     [SerializeField] private Vector3 originPosition;
@@ -37,13 +37,13 @@ public class My_XZ_Grid : MonoBehaviour
                 cloneGrid.transform.parent = this.transform;
                 if (z%2 == 0 )
                 {
-                    cloneGrid.GetComponent<GridObject>().Shape = BaseGridObject._shape.Square;
+                    cloneGrid.GetComponent<GridObject>().Shape = GridObject._shape.Square;
                     cloneGrid.GetComponent<GridObject>().GridSize = 1 * cellSize;
                     cloneGrid.transform.localPosition = new Vector3(x * 4, 0, z * 2);
                 }
                 else
                 {
-                    cloneGrid.GetComponent<GridObject>().Shape = BaseGridObject._shape.Octagon;
+                    cloneGrid.GetComponent<GridObject>().Shape = GridObject._shape.Octagon;
                     cloneGrid.GetComponent<GridObject>().GridSize = 2 * cellSize;
                     cloneGrid.transform.localPosition = new Vector3((x * 4) + 2, 0, (z *2));
                 }
