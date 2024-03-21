@@ -882,11 +882,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c328848d56f4d1439d89bb9045df02f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPrefab: {fileID: 242980820195632991, guid: bb713269cabee1e43b29d8273952cae0,
+  gridPrefab: {fileID: 242980820195632991, guid: 862077ba6b1b1534e8c975a4d7f78703,
     type: 3}
-  x_axis_length: 31
-  y_axis_length: 0
-  z_axis_length: 31
+  x_axis_length: 30
+  y_axis_length: 15
+  z_axis_length: 30
   cellSize: 1
   originPosition: {x: 0, y: 0, z: 0}
 --- !u!4 &594925435
@@ -2457,7 +2457,7 @@ Transform:
   m_GameObject: {fileID: 1248867748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.1, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
