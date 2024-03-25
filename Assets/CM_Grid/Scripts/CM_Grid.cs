@@ -10,15 +10,16 @@ public class CM_Grid
     int width;
     int height;
     float cellSize;
+    Vector3 originPosition;
     int[,] gridArray;
     private TextMesh[,] debugTextArray;
     //private GameObject[,] textObjcets;
-    public CM_Grid(int width, int height, float cellSize)
+    public CM_Grid(int width, int height, float cellSize, Vector3 originPosition)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
-
+        this.originPosition = originPosition;   
         gridArray = new int[width, height];
         debugTextArray = new TextMesh[width, height];
 
@@ -41,21 +42,19 @@ public class CM_Grid
 
     public Vector3 GetWorldPosition2D(int x, int y)
     {
-        return new Vector3(x , y) * cellSize;
+        return new Vector3(x , y) * cellSize + originPosition;
     }
 
     public Vector3 GetWorldPosition3D(int x, int y, int z)
     {
-        return new Vector3(x, y, z) * cellSize;
+        return new Vector3(x, y, z) * cellSize + originPosition;
     }
 
     private void GetXYZ(Vector3 worldPosition, out int x,out int y, out int z)
     {
-        x = Mathf.FloorToInt(worldPosition.x / cellSize);
-        y = Mathf.FloorToInt(worldPosition.y / cellSize);
-        z = Mathf.FloorToInt(worldPosition.z / cellSize);
-
-        
+        x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
+        y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);
+        z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
     }
 
     public void SetValue(int x, int y, int z, int value)

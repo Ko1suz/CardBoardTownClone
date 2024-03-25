@@ -8,7 +8,7 @@ public class CM_Testing : MonoBehaviour
     private CM_Grid cm_Grid;
     void Start()
     {
-        cm_Grid = new CM_Grid(4,2, 10f);
+        cm_Grid = new CM_Grid(4,2, 10f, new Vector3(5,0,5));
     }
 
     private void Update()
