@@ -7,6 +7,14 @@ using UnityEngine;
 
 public class CM_Grid 
 {
+    public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
+    public class OnGridValueChangedEventArgs : EventArgs
+    {
+        public int x;
+        public int y;
+    }
+
+
     int width;
     int height;
     float cellSize;
@@ -40,6 +48,19 @@ public class CM_Grid
         SetValue(2, 0, 1, 46);
     }
 
+    public int GetWidth()
+    {
+        return width;
+    }
+    public int GetHeight()
+    {
+        return height;
+    }
+    public float GetCellSize()
+    {
+        return cellSize;
+    }
+
     public Vector3 GetWorldPosition2D(int x, int y)
     {
         return new Vector3(x , y) * cellSize + originPosition;
@@ -63,6 +84,7 @@ public class CM_Grid
         {
             gridArray[x, z] = value;
             debugTextArray[x, z].text = gridArray[x, z].ToString();
+            if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
         }
     }
 
