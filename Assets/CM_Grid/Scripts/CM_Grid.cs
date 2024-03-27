@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class CM_Grid 
 {
+    public const int HEAT_MAP_MAX_VALUE = 100;
+    public const int HEAT_MAP_MIN_VALUE = 0;
     public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
     public class OnGridValueChangedEventArgs : EventArgs
     {
@@ -45,7 +47,12 @@ public class CM_Grid
         Debug.DrawLine(GetWorldPosition3D(0, 0, height), GetWorldPosition3D(width, 0, height), Color.green, 100f);
         Debug.DrawLine(GetWorldPosition3D(width, 0, 0), GetWorldPosition3D(width, 0, height), Color.green, 100f);
 
-        SetValue(2, 0, 1, 46);
+        OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) =>
+        {
+            debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y].ToString();
+        };
+
+        //SetValue(2, 0, 1, 46);
     }
 
     public int GetWidth()
@@ -82,7 +89,7 @@ public class CM_Grid
     {
         if (x >= 0 && z >= 0 && x < width && z < height)
         {
-            gridArray[x, z] = value;
+            gridArray[x, z] = Mathf.Clamp(value, HEAT_MAP_MIN_VALUE, HEAT_MAP_MAX_VALUE);
             debugTextArray[x, z].text = gridArray[x, z].ToString();
             if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
         }

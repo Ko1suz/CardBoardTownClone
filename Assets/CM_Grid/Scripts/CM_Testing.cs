@@ -10,9 +10,9 @@ public class CM_Testing : MonoBehaviour
     private CM_Grid cm_Grid;
     void Start()
     {
-        cm_Grid = new CM_Grid(4,2, 10f, new Vector3(0,0,0));
+        cm_Grid = new CM_Grid(20,10, 10f, Vector3.zero);
 
-        CM_HeatMapVisual cm_HeatMapVisual = new CM_HeatMapVisual(cm_Grid, GetComponent<MeshFilter>());
+        //CM_HeatMapVisual cm_HeatMapVisual = new CM_HeatMapVisual(cm_Grid, GetComponent<MeshFilter>());
     }
 
     private void Update()
@@ -27,7 +27,7 @@ public class CM_Testing : MonoBehaviour
             Debug.Log(cm_Grid.GetValue(GetMousePos()));
         }
     }
-    public Vector3 GetMousePos()
+    public static Vector3 GetMousePos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit))
@@ -41,35 +41,35 @@ public class CM_Testing : MonoBehaviour
     }
 }
 
-public class CM_HeatMapVisual
-{
-    private CM_Grid cm_Grid;
+//public class CM_HeatMapVisual_InClass
+//{
+//    private CM_Grid cm_Grid;
 
-    public CM_HeatMapVisual(CM_Grid cm_Grid, MeshFilter meshFilter)
-    {
-        this.cm_Grid = cm_Grid;
+//    public CM_HeatMapVisual_InClass(CM_Grid cm_Grid, MeshFilter meshFilter)
+//    {
+//        this.cm_Grid = cm_Grid;
 
-        Vector3[] vertices;
-        Vector2[] uv;
-        int[] triangles;
+//        Vector3[] vertices;
+//        Vector2[] uv;
+//        int[] triangles;
 
-        MeshUtils.CreateEmptyMeshArrays(cm_Grid.GetWidth() * cm_Grid.GetHeight(), out vertices, out uv, out triangles);
-        for (int x = 0; x < cm_Grid.GetWidth(); x++)
-        {
-            for (int y = 0; y < cm_Grid.GetHeight(); y++)
-            {
-                int index = x * cm_Grid.GetHeight() + y;
-                Vector3 baseSize = new Vector3(1,1) * cm_Grid.GetCellSize();
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, cm_Grid.GetWorldPosition3D(x,0,y) + baseSize * .5f, 0f, baseSize, Vector2.zero, Vector2.zero);
-            }
-        }
+//        MeshUtils.CreateEmptyMeshArrays(cm_Grid.GetWidth() * cm_Grid.GetHeight(), out vertices, out uv, out triangles);
+//        for (int x = 0; x < cm_Grid.GetWidth(); x++)
+//        {
+//            for (int y = 0; y < cm_Grid.GetHeight(); y++)
+//            {
+//                int index = x * cm_Grid.GetHeight() + y;
+//                Vector3 baseSize = new Vector3(1, 1) * cm_Grid.GetCellSize();
+//                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, cm_Grid.GetWorldPosition3D(x, 0, y) + baseSize * .5f, 0f, baseSize, Vector2.zero, Vector2.zero);
+//            }
+//        }
 
-        Mesh mesh = new Mesh();
+//        Mesh mesh = new Mesh();
 
-        mesh.vertices = vertices;
-        mesh.uv = uv;
-        mesh.triangles = triangles;
+//        mesh.vertices = vertices;
+//        mesh.uv = uv;
+//        mesh.triangles = triangles;
 
-        meshFilter.mesh = mesh;
-    }
-}
+//        meshFilter.mesh = mesh;
+//    }
+//}
