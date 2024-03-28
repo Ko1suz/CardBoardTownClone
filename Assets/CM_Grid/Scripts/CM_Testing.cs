@@ -19,15 +19,21 @@ public class CM_Testing : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            cm_Grid.SetValue(GetMousePos(), 5);
-            Debug.Log(GetMousePos());
+            //cm_Grid.SetValue(GetMousePos3D(), 5);
+            //Debug.Log(GetMousePos3D());
+
+            cm_Grid.SetValue(GetMousePos2D(), 5);
+            Debug.Log(GetMousePos2D());
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            Debug.Log(cm_Grid.GetValue(GetMousePos()));
+            //Debug.Log(cm_Grid.GetValue(GetMousePos3D()));
+
+            Debug.Log(cm_Grid.GetValue(GetMousePos2D()));
         }
     }
-    public static Vector3 GetMousePos()
+    //3D
+    public static Vector3 GetMousePos3D()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit))
@@ -39,6 +45,29 @@ public class CM_Testing : MonoBehaviour
             return Vector3.zero;
         }
     }
+
+
+    public static Vector3 GetMousePos2D()
+    {
+        Vector3 vec = GetMouseWoldPosWithZ(Input.mousePosition, Camera.main);
+        vec.z = 0;
+        return vec;
+    }
+
+    public static Vector3 GetMouseWoldPosWithZ()
+    {
+        return GetMouseWoldPosWithZ(Input.mousePosition, Camera.main);
+    }
+    public static Vector3 GetMouseWoldPosWithZ(Camera worldCamera)
+    {
+        return GetMouseWoldPosWithZ(Input.mousePosition, worldCamera);
+    }
+    public static Vector3 GetMouseWoldPosWithZ(Vector3 screenPosition, Camera worldCamera)
+    {
+        Vector3 worldPosition = worldCamera.ScreenToWorldPoint(screenPosition);
+        return worldPosition;
+    }
+
 }
 
 //public class CM_HeatMapVisual_InClass

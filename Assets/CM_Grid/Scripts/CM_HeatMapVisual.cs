@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
+using UnityEditor;
 using UnityEngine;
 
 public class CM_HeatMapVisual : MonoBehaviour
@@ -16,6 +17,13 @@ public class CM_HeatMapVisual : MonoBehaviour
     {
         this.grid = grid;   
         UpdateHeatMapVisual();
+
+        grid.OnGridValueChanged += Grid_OnGridValueChanged;
+    }
+
+    private void Grid_OnGridValueChanged(object sender, CM_Grid.OnGridValueChangedEventArgs e)
+    {
+        UpdateHeatMapVisual();
     }
 
     private void UpdateHeatMapVisual()
@@ -28,7 +36,7 @@ public class CM_HeatMapVisual : MonoBehaviour
             {
                 int index = x * grid.GetHeight() + y;
                 Vector3 quadSize = new Vector3(1, 1) * grid.GetCellSize();
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition3D(x, 0, y), 270, quadSize, Vector2.zero, Vector2.zero);
+                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition2D(x, y) + quadSize * 0.5f, 0, quadSize, Vector2.zero, Vector2.zero);
             }
         }
 

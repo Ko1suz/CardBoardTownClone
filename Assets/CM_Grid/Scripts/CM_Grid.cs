@@ -39,13 +39,20 @@ public class CM_Grid
         {
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
-                debugTextArray[x,y] = UtilsClass.CreateWorldText(gridArray[x,y].ToString(), null, GetWorldPosition3D(x, 0, y) + new Vector3(cellSize, 0 , cellSize) * 0.5f, 20 , Color.green, TextAnchor.MiddleCenter);
-                Debug.DrawLine(GetWorldPosition3D(x, 0, y), GetWorldPosition3D(x, 0, y + 1), Color.green, 100f);
-                Debug.DrawLine(GetWorldPosition3D(x, 0, y), GetWorldPosition3D(x + 1, 0, y), Color.green, 100f);
+                //debugTextArray[x,y] = UtilsClass.CreateWorldText(gridArray[x,y].ToString(), null, GetWorldPosition3D(x, 0, y) + new Vector3(cellSize, 0 , cellSize) * 0.5f, 20 , Color.green, TextAnchor.MiddleCenter);
+                //Debug.DrawLine(GetWorldPosition3D(x, 0, y), GetWorldPosition3D(x, 0, y + 1), Color.green, 100f);
+                //Debug.DrawLine(GetWorldPosition3D(x, 0, y), GetWorldPosition3D(x + 1, 0, y), Color.green, 100f);
+
+                debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition2D(x, y) + new Vector3(cellSize, cellSize) * 0.5f, 20, Color.green, TextAnchor.MiddleCenter);
+                Debug.DrawLine(GetWorldPosition2D(x, y), GetWorldPosition2D(x, y + 1), Color.green, 100f);
+                Debug.DrawLine(GetWorldPosition2D(x, y), GetWorldPosition2D(x + 1, y), Color.green, 100f);
             }
         }
-        Debug.DrawLine(GetWorldPosition3D(0, 0, height), GetWorldPosition3D(width, 0, height), Color.green, 100f);
-        Debug.DrawLine(GetWorldPosition3D(width, 0, 0), GetWorldPosition3D(width, 0, height), Color.green, 100f);
+        //Debug.DrawLine(GetWorldPosition3D(0, 0, height), GetWorldPosition3D(width, 0, height), Color.green, 100f);
+        //Debug.DrawLine(GetWorldPosition3D(width, 0, 0), GetWorldPosition3D(width, 0, height), Color.green, 100f);
+
+        Debug.DrawLine(GetWorldPosition2D(0, height), GetWorldPosition2D(width, height), Color.green, 100f);
+        Debug.DrawLine(GetWorldPosition2D(width, 0), GetWorldPosition2D(width, height), Color.green, 100f);
 
         OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) =>
         {
@@ -87,10 +94,10 @@ public class CM_Grid
 
     public void SetValue(int x, int y, int z, int value)
     {
-        if (x >= 0 && z >= 0 && x < width && z < height)
+        if (x >= 0 && y >= 0 && x < width && y < height)
         {
-            gridArray[x, z] = Mathf.Clamp(value, HEAT_MAP_MIN_VALUE, HEAT_MAP_MAX_VALUE);
-            debugTextArray[x, z].text = gridArray[x, z].ToString();
+            gridArray[x, y] = Mathf.Clamp(value, HEAT_MAP_MIN_VALUE, HEAT_MAP_MAX_VALUE);
+            debugTextArray[x, y].text = gridArray[x, y].ToString();
             if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
         }
     }
@@ -100,14 +107,14 @@ public class CM_Grid
         int x, y, z;
         GetXYZ(worldPosition, out x, out y, out z);
         Debug.Log("x->" + x + " y->" + y + " z->" + z);
-        SetValue(x,0,z, value);
+        SetValue(x,y,z, value);
     }
 
     public int GetValue(int x, int y, int z)
     {
-        if (x >= 0 && z >= 0 && x < width && z < height)
+        if (x >= 0 && y >= 0 && x < width && y < height)
         {
-            return gridArray[x, z];
+            return gridArray[x, y];
         }
         else
         {

@@ -16,7 +16,7 @@ public class CM_HeatMapTest : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 position = CM_Testing.GetMousePos();
+            Vector3 position = CM_Testing.GetMousePos2D();
             int value = grid.GetValue(position);
             grid.SetValue(position, value + 5);
         }
