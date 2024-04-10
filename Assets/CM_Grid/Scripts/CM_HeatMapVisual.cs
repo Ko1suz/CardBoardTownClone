@@ -7,7 +7,8 @@ using UnityEngine;
 public class CM_HeatMapVisual : MonoBehaviour
 {
     CM_Grid grid;
-    Mesh mesh;  
+    Mesh mesh;
+    bool updateMesh;
     private void Awake()
     {
         mesh = new Mesh();
@@ -23,7 +24,17 @@ public class CM_HeatMapVisual : MonoBehaviour
 
     private void Grid_OnGridValueChanged(object sender, CM_Grid.OnGridValueChangedEventArgs e)
     {
-        UpdateHeatMapVisual();
+        //UpdateHeatMapVisual();
+        updateMesh = true;
+    }
+
+    private void LateUpdate()
+    {
+        if (updateMesh)
+        {
+            updateMesh = false;
+            UpdateHeatMapVisual();
+        }
     }
 
     private void UpdateHeatMapVisual()
@@ -36,7 +47,12 @@ public class CM_HeatMapVisual : MonoBehaviour
             {
                 int index = x * grid.GetHeight() + y;
                 Vector3 quadSize = new Vector3(1, 1) * grid.GetCellSize();
-                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition2D(x, y) + quadSize * 0.5f, 0, quadSize, Vector2.zero, Vector2.zero);
+
+                int gridValue = grid.GetValue(x,y);
+                float gridValueNormalized = (float)gridValue / CM_Grid.HEAT_MAP_MAX_VALUE;
+                Vector2 gridValueUV = new Vector2(gridValueNormalized, 0f);
+
+                MeshUtils.AddToMeshArrays(vertices, uv, triangles, index, grid.GetWorldPosition2D(x, y) + quadSize * 0.5f, 0, quadSize, gridValueUV, gridValueUV);
             }
         }
 
