@@ -7,10 +7,10 @@ using CodeMonkey.Utils;
 
 public class CM_Testing : MonoBehaviour
 {
-    private CM_Grid cm_Grid;
+    private CM_Grid<bool> cm_Grid;
     void Start()
     {
-        cm_Grid = new CM_Grid(20,10, 10f, Vector3.zero);
+        //cm_Grid = new CM_Grid<bool>(20,10, 10f, Vector3.zero);
 
         //CM_HeatMapVisual cm_HeatMapVisual = new CM_HeatMapVisual(cm_Grid, GetComponent<MeshFilter>());
     }
@@ -22,14 +22,14 @@ public class CM_Testing : MonoBehaviour
             //cm_Grid.SetValue(GetMousePos3D(), 5);
             //Debug.Log(GetMousePos3D());
 
-            cm_Grid.SetValue(GetMousePos2D(), 5);
+            //cm_Grid.SetValue(GetMousePos2D(), 5);
             Debug.Log(GetMousePos2D());
         }
         else if (Input.GetMouseButtonDown(1))
         {
             //Debug.Log(cm_Grid.GetValue(GetMousePos3D()));
 
-            Debug.Log(cm_Grid.GetValue(GetMousePos2D()));
+            Debug.Log(cm_Grid.GetGridObject(GetMousePos2D()));
         }
     }
     //3D

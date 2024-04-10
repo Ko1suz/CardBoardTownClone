@@ -6,7 +6,7 @@ using System.Diagnostics.Tracing;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
-public class CM_Grid
+public class CM_Grid <CM_TGridObjcet>
 {
     public const int HEAT_MAP_MAX_VALUE = 100;
     public const int HEAT_MAP_MIN_VALUE = 0;
@@ -22,18 +22,27 @@ public class CM_Grid
     int height;
     float cellSize;
     Vector3 originPosition;
-    int[,] gridArray;
+    CM_TGridObjcet[,] gridArray;
     private TextMesh[,] debugTextArray;
     bool debug = true;
     //private GameObject[,] textObjcets;
-    public CM_Grid(int width, int height, float cellSize, Vector3 originPosition)
+    public CM_Grid(int width, int height, float cellSize, Vector3 originPosition, Func<CM_Grid<CM_TGridObjcet>, int, int, CM_TGridObjcet> createGridObject)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPosition = originPosition;   
-        gridArray = new int[width, height];
-      
+        gridArray = new CM_TGridObjcet[width, height];
+
+        for (int x = 0; x < gridArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridArray.GetLength(1); y++)
+            {
+                gridArray[x, y] = createGridObject(this, x, y);
+            }
+        }
+
+
         if (debug)
         {
             debugTextArray = new TextMesh[width, height];
@@ -45,7 +54,7 @@ public class CM_Grid
                     //Debug.DrawLine(GetWorldPosition3D(x, 0, y), GetWorldPosition3D(x, 0, y + 1), Color.green, 100f);
                     //Debug.DrawLine(GetWorldPosition3D(x, 0, y), GetWorldPosition3D(x + 1, 0, y), Color.green, 100f);
 
-                    debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition2D(x, y) + new Vector3(cellSize, cellSize) * 0.5f, 20, Color.white, TextAnchor.MiddleCenter);
+                    debugTextArray[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition2D(x, y) + new Vector3(cellSize, cellSize) * 0.5f, 20, Color.white, TextAnchor.MiddleCenter);
                     Debug.DrawLine(GetWorldPosition2D(x, y), GetWorldPosition2D(x, y + 1), Color.white, 100f);
                     Debug.DrawLine(GetWorldPosition2D(x, y), GetWorldPosition2D(x + 1, y), Color.white, 100f);
                 }
@@ -58,7 +67,7 @@ public class CM_Grid
 
             OnGridValueChanged += (object sender, OnGridValueChangedEventArgs eventArgs) =>
             {
-                debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y].ToString();
+                debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y]?.ToString();
             };
         }
     }
@@ -93,40 +102,40 @@ public class CM_Grid
         z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
     }
 
-    public void SetValue(int x, int y, int z, int value)
+    public void SetGridObject(int x, int y, int z, CM_TGridObjcet value)
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
-            gridArray[x, y] = Mathf.Clamp(value, HEAT_MAP_MIN_VALUE, HEAT_MAP_MAX_VALUE);
+            gridArray[x, y] = value;
             //debugTextArray[x, y].text = gridArray[x, y].ToString();
             if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
         }
     }
 
-    public void SetValue(int x, int y, int value)
+    public void SetGridObject(int x, int y, CM_TGridObjcet value)
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
-            gridArray[x, y] = Mathf.Clamp(value, HEAT_MAP_MIN_VALUE, HEAT_MAP_MAX_VALUE);
+            gridArray[x, y] = value;
             //debugTextArray[x, y].text = gridArray[x, y].ToString();
             if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
         }
     }
 
-    public void SetValue(Vector3 worldPosition, int value)
+    public void TriggerGridObjectChanged(int x, int y)
+    {
+        if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
+    }
+
+    public void SetGridObject(Vector3 worldPosition, CM_TGridObjcet value)
     {
         int x, y, z;
         GetXYZ(worldPosition, out x, out y, out z);
         Debug.Log("x->" + x + " y->" + y + " z->" + z);
-        SetValue(x,y,z, value);
+        SetGridObject(x,y,z, value);
     }
 
-    public void AddValue(int x, int y, int value)
-    {
-        SetValue(x, y, GetValue(x, y) + value);
-    }
-
-    public int GetValue(int x, int y, int z)
+    public CM_TGridObjcet GetGridObject(int x, int y, int z)
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
@@ -134,11 +143,11 @@ public class CM_Grid
         }
         else
         {
-            return -1;
+            return default(CM_TGridObjcet);
         }
     }
 
-    public int GetValue(int x, int y)
+    public CM_TGridObjcet GetGridObject(int x, int y)
     {
         if (x >= 0 && y >= 0 && x < width && y < height)
         {
@@ -146,38 +155,13 @@ public class CM_Grid
         }
         else
         {
-            return -1;
+            return default(CM_TGridObjcet);
         }
     }
-    public int GetValue(Vector3 worldPosition)
+    public CM_TGridObjcet GetGridObject(Vector3 worldPosition)
     {
         int x,y,z;
         GetXYZ(worldPosition, out x, out y, out z);
-        return GetValue(x, y, z);
-    }
-
-    public void AddValue (Vector3 worldPosition, int value, int fullValueRange, int totalRange) 
-    {
-        int lowerValueAmount = Mathf.RoundToInt((float)value / (totalRange - fullValueRange));
-        GetXYZ(worldPosition,out int originX, out int originY, out int originZ);
-        for (int x = 0; x < totalRange; x++)
-        {
-            for (int y = 0; y < totalRange - x; y++)
-            {
-                int radius = x + y;
-                int addValueAmount = value;
-                if (radius > fullValueRange) { addValueAmount -= lowerValueAmount * (radius - fullValueRange); }
-                AddValue(originX + x, originY + y, addValueAmount);
-                if (x != 0){ AddValue(originX - x, originY + y, addValueAmount);}
-
-                if (y != 0) 
-                {
-                    AddValue(originX + x, originY - y, addValueAmount);
-                    if (x != 0) { AddValue(originX - x, originY - y, addValueAmount); }
-                }
-               
-
-            }
-        }
+        return GetGridObject(x, y, z);
     }
 }
