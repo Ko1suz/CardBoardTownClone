@@ -4,15 +4,34 @@ using UnityEngine;
 
 public class CM_GridBuildingSystem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    CM_GridXZ<CM_GridObject> grid;
+
+    private void Awake()
     {
-        
+        int gridWidth = 10;
+        int gridHeight = 10;
+        float cellSize = 10;
+
+        grid = new CM_GridXZ<CM_GridObject> (gridWidth, gridHeight, cellSize, Vector3.zero, (CM_GridXZ<CM_GridObject> g, int x, int z) => new CM_GridObject(g,x,z));
+    }
+}
+
+
+public class CM_GridObject
+{
+    private CM_GridXZ<CM_GridObject> grid;
+    private int x;
+    private int z;
+
+    public CM_GridObject(CM_GridXZ<CM_GridObject> grid, int x, int z)
+    {
+        this.grid = grid;
+        this.x = x;
+        this.z = z;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override string ToString()
     {
-        
+        return x + " " + z;
     }
 }
