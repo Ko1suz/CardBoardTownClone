@@ -528,5 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeae4c6b224ef5748ae153fc7c98422b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cm_PlacedObjectTypeSO: {fileID: 11400000, guid: d918e2085886133418b2ca12e129a226,
-    type: 2}
+  cm_PlacedObjectTypeSOList:
+  - {fileID: 11400000, guid: 5cb1ef2de04b1b647aa8fd6cbf20f2e6, type: 2}
+  - {fileID: 11400000, guid: f0d8bd4f5c6054f448a679872b646de9, type: 2}
+  - {fileID: 11400000, guid: d918e2085886133418b2ca12e129a226, type: 2}

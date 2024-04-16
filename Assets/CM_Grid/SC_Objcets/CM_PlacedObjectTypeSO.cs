@@ -7,7 +7,17 @@ public class CM_PlacedObjectTypeSO : ScriptableObject
 {
     public static Dir GetNexDir(Dir dir)
     {
-        return Dir.Down;
+        switch (dir)
+        {
+            default:
+            case Dir.Down:   return Dir.Left;
+                
+            case Dir.Left:   return Dir.Up;
+                
+            case Dir.Up:     return Dir.Right;
+                
+            case Dir.Right:  return Dir.Down;
+        }
     }
 
     public enum Dir { Down, Left, Up, Right }
@@ -20,12 +30,32 @@ public class CM_PlacedObjectTypeSO : ScriptableObject
 
     public int GetRotationAngle(Dir dir)
     {
-        return 0;
+        switch (dir)
+        {
+            default:
+            case Dir.Down:   return 0;
+
+            case Dir.Left:   return 90;
+
+            case Dir.Up:     return 180;
+
+            case Dir.Right:  return 270;
+        }
     }
 
     public Vector2Int GetRotationOffset(Dir dir) 
     {
-        return Vector2Int.zero;
+        switch (dir)
+        {
+            default:
+            case Dir.Down:   return new Vector2Int(0, 0);
+
+            case Dir.Left:   return new Vector2Int(0, width);
+
+            case Dir.Up:     return new Vector2Int(width, height);
+
+            case Dir.Right:  return new Vector2Int(height, 0);
+        }
     }
 
     public List<Vector2Int> GetGridPositionList(Vector2Int offset, Dir dir) 
