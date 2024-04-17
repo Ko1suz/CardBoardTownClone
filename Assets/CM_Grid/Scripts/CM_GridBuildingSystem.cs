@@ -48,20 +48,35 @@ public class CM_GridBuildingSystem : MonoBehaviour
             {
                 Vector2Int rotatinOffset = cm_PlacedObjectTypeSO.GetRotationOffset(dir);
                 Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x,z) + new Vector3(rotatinOffset.x, 0, rotatinOffset.y) * grid.GetCellSize();
-                Transform buildTransform =
-                    Instantiate(cm_PlacedObjectTypeSO.prefab,
-                    placedObjectWorldPosition,
-                    Quaternion.Euler(0, cm_PlacedObjectTypeSO.GetRotationAngle(dir),0)
-                    ); ;
+
+
+                CM_PlacedObject placedObject = CM_PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x,z),dir, cm_PlacedObjectTypeSO);
+                
 
                 foreach (Vector2Int gridPosition in gridPositionList)
                 {
-                    grid.GetGridObject(gridPosition.x, gridPosition.y).SetTransform(buildTransform);
+                    grid.GetGridObject(gridPosition.x, gridPosition.y).SetPlacedObject(placedObject);
                 }
             }
             else 
             {
                 UtilsClass.CreateWorldTextPopup("Cannot Build", grid.GetWorldPosition(x,z));
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            CM_GridObject gridObject =  grid.GetGridObject(CM_Testing.GetMousePos3D());
+            CM_PlacedObject placedObject = gridObject.GetPlacedObjet();
+            if (placedObject != null)
+            {
+                placedObject.DestroySelf();
+                List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
+                foreach (Vector2Int gridPosition in gridPositionList)
+                {
+                    grid.GetGridObject(gridPosition.x, gridPosition.y).ClearPlacedObjcet();
+                }
+
             }
         }
 
@@ -81,23 +96,28 @@ public class CM_GridBuildingSystem : MonoBehaviour
         private CM_GridXZ<CM_GridObject> grid;
         private int x;
         private int z;
-        Transform gridObjcetHolder;
-        public Transform SetGridObjcetHolder { get => gridObjcetHolder; set => gridObjcetHolder = value; }
+        CM_PlacedObject placedObject;
 
-        public void SetTransform(Transform transform)
+        public void SetPlacedObject(CM_PlacedObject placedObject)
         {
-            gridObjcetHolder = transform;
+            this.placedObject = placedObject;
             grid.TriggerGridObjectChanged(x,z);
         }
 
-        public void ClearTransform(Transform transform)
+        public CM_PlacedObject GetPlacedObjet()
         {
-            gridObjcetHolder = null;
+            return placedObject;
+        }
+
+        public void ClearPlacedObjcet()
+        {
+            this.placedObject = null;
+            grid.TriggerGridObjectChanged(x, z);
         }
 
         public bool CanBuild()
         {
-            return gridObjcetHolder == null;
+            return placedObject == null;
         }
         public CM_GridObject(CM_GridXZ<CM_GridObject> grid, int x, int z)
         {
@@ -110,7 +130,7 @@ public class CM_GridBuildingSystem : MonoBehaviour
 
         public override string ToString()
         {
-            return x + "," + z + "\n" + gridObjcetHolder;
+            return x + "," + z + "\n" + placedObject;
         }
     }
 

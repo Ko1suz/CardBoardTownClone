@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameString: TestTownHall
   prefab: {fileID: 2499414142690952232, guid: c8544fa002290cf458cff78dd4034ee1, type: 3}
-  visual: {fileID: 2499414142690952232, guid: c8544fa002290cf458cff78dd4034ee1, type: 3}
+  visual: {fileID: 2499414142690952232, guid: 85e279a5146734d42a0bcb73489e6eb2, type: 3}
   width: 2
   height: 2
