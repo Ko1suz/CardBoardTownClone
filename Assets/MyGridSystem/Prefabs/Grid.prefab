@@ -49,6 +49,8 @@ MonoBehaviour:
   axis: 2
   shape: 5
   gridSize: 2
+  createGridVisual: 0
+  lineMat: {fileID: 2100000, guid: 8f6b96334ff443b47939061a31dc3907, type: 2}
 --- !u!120 &138763713885290951
 LineRenderer:
   serializedVersion: 2

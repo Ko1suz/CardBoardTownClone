@@ -134,6 +134,49 @@ public class CM_GridBuildingSystem : MonoBehaviour
         }
     }
 
+    //public class Test_GridObject_2
+    //{
+    //    private CM_GridXZ<Test_GridObject_2> grid;
+    //    private int x;
+    //    private int z;
+    //    CM_PlacedObject placedObject;
+
+    //    public void SetPlacedObject(CM_PlacedObject placedObject)
+    //    {
+    //        this.placedObject = placedObject;
+    //        grid.TriggerGridObjectChanged(x, z);
+    //    }
+
+    //    public CM_PlacedObject GetPlacedObjet()
+    //    {
+    //        return placedObject;
+    //    }
+
+    //    public void ClearPlacedObjcet()
+    //    {
+    //        this.placedObject = null;
+    //        grid.TriggerGridObjectChanged(x, z);
+    //    }
+
+    //    public bool CanBuild()
+    //    {
+    //        return placedObject == null;
+    //    }
+    //    public Test_GridObject_2(CM_GridXZ<Test_GridObject_2> grid, int x, int z)
+    //    {
+    //        this.grid = grid;
+    //        this.x = x;
+    //        this.z = z;
+    //    }
+
+
+
+    //    public override string ToString()
+    //    {
+    //        return x + "," + z + "\n" + placedObject;
+    //    }
+    //}
+
 }
 
 
