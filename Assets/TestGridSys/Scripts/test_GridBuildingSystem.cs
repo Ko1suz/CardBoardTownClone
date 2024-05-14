@@ -10,9 +10,5 @@ public class test_GridBuildingSystem : MonoBehaviour
         test_GridXYZ test_GridXYZ = new test_GridXYZ(); 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }
