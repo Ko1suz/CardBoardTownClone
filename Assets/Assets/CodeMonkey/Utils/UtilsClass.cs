@@ -113,6 +113,7 @@ namespace CodeMonkey.Utils {
             textMesh.fontSize = fontSize;
             textMesh.color = color;
             textMesh.GetComponent<MeshRenderer>().sortingOrder = sortingOrder;
+            textMesh.characterSize = 0.1f;//benım eklediğim kısım
             return textMesh;
         }
 
