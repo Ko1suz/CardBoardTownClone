@@ -18,10 +18,11 @@ public class test_SquareGrid : test_BaseGrid
     protected Vector3[] _positions;
 
 
-    public test_SquareGrid(int x, int y, int z, bool showDebug = false) : base(x, y, z)
+    public test_SquareGrid(int x, int y, int z, float baseGridSize, bool showDebug = false) : base(x, y, z, baseGridSize)
     {
         this.showDebug = showDebug;
-        DrawDebugLines(x, y, z);
+        this.gridSize = baseGridSize/2;
+        //DrawDebugLines(new Vector3(x, y, z));
     }
 
     private void OnEnable()
@@ -38,9 +39,8 @@ public class test_SquareGrid : test_BaseGrid
         _positions[_shapePointAmount] = _positions[0];
     }
 
-    public void DrawDebugLines(int x, int y, int z)
+    public override void DrawDebugLines(Vector3 worldPos)
     {
-       
         if (showDebug)
         {
             Debug.Log("DebugDrawLines Çalýþýtý");
@@ -56,14 +56,14 @@ public class test_SquareGrid : test_BaseGrid
             {
                 if (i < _shapePointAmount - 1)
                 {
-                    Debug.DrawLine(_shapePoints[i] + new Vector3(x, y, z), _shapePoints[i + 1] + new Vector3(x,y,z), Color.white, 1000f);
+                    Debug.DrawLine(_shapePoints[i] + worldPos, _shapePoints[i + 1] + worldPos, Color.white, 1000f);
                 }
                 else
                 {
-                    Debug.DrawLine(_shapePoints[i] + new Vector3(x, y, z), _shapePoints[0] + new Vector3(x, y, z), Color.white, 1000f);
+                    Debug.DrawLine(_shapePoints[i] + worldPos, _shapePoints[0] + worldPos, Color.white, 1000f);
                 }
             }
-            UtilsClass.CreateWorldText(("x="+x+" y="+y+" z="+z), null, new Vector3(x, y, z), 20, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
+            UtilsClass.CreateWorldText(("x="+x+" y="+y+" z="+z), null, worldPos, 20, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
         }
     }
     public void SetInitiatorPointAmount()
