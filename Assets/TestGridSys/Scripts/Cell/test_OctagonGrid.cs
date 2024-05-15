@@ -62,7 +62,7 @@ public class test_OctagonGrid : test_BaseGrid
                     Debug.DrawLine(_shapePoints[i] + worldPos, _shapePoints[0] + worldPos, Color.white, 1000f);
                 }
             }
-            UtilsClass.CreateWorldText(("x=" + x + " y=" + y + " z=" + z), null, worldPos, 20, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
+            UtilsClass.CreateWorldText(("x=" + worldPos.x + " y=" + worldPos.y + " z=" + worldPos.z), null, worldPos, 20, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center);
         }
     }
     public void SetInitiatorPointAmount()
