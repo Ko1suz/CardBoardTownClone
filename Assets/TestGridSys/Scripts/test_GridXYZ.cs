@@ -52,24 +52,57 @@ public class test_GridXYZ
         return new Vector3(x, y, (z * 2) + 1) * baseGridSize + originPosition;
     }
 
-    public void GetGridXYZOctagon(Vector3 worldPosition, out int x, out int y, out int z)
+    public void GetGridIndexAtWorldPosition(Vector3 worldPosition, out int x, out int y, out int z)
     {
-        x = Mathf.FloorToInt((worldPosition - originPosition).x / 2 / baseGridSize);
-        y = Mathf.FloorToInt((worldPosition - originPosition).y / baseGridSize);
-        z = Mathf.FloorToInt((worldPosition - originPosition).z / baseGridSize);
-    }
+        float smallestDistance = float.MaxValue;
+        Vector3 closestGridPosition = Vector3.zero;
+        bool isSquareGrid = false;
 
-    public void GetGridXYZSquare(Vector3 worldPosition, out int x, out int y, out int z)
-    {
-        x = Mathf.FloorToInt((((worldPosition - originPosition).x / 2) - 1) / baseGridSize);
-        y = Mathf.FloorToInt((worldPosition - originPosition).y / baseGridSize);
-        z = Mathf.FloorToInt((worldPosition - originPosition).z / baseGridSize);
-    }
+        // Baþlangýçta x, y, ve z deðerlerini -1 olarak atýyoruz.
+        x = -1;
+        y = -1;
+        z = -1;
 
-    public void GetGridXYZ(Vector3 worldPosition, out int x, out int y, out int z)
-    {
-        x = Mathf.FloorToInt((worldPosition - originPosition).x / baseGridSize);
-        y = Mathf.FloorToInt((worldPosition - originPosition).y / baseGridSize);
-        z = Mathf.FloorToInt((worldPosition - originPosition).z / baseGridSize);
+        for (int yIndex = 0; yIndex < gridObjcets.GetLength(1); yIndex++)
+        {
+            for (int zIndex = 0; zIndex < gridObjcets.GetLength(2); zIndex++)
+            {
+                for (int xIndex = 0; xIndex < gridObjcets.GetLength(0); xIndex++)
+                {
+                    Vector3 gridPosition = gridObjcets[xIndex, yIndex, zIndex].GetWorldPosition();
+                    float gridSizeMultiplier = gridObjcets[xIndex, yIndex, zIndex].GetGridSizeMultiplier();
+                    float distance = Vector3.Distance(worldPosition, gridPosition);
+
+                    // Kare grid için mesafe kontrolü
+                    if (!isSquareGrid && distance < smallestDistance)
+                    {
+                        smallestDistance = distance;
+                        closestGridPosition = gridPosition;
+                        x = xIndex;
+                        y = yIndex;
+                        z = zIndex;
+                        isSquareGrid = true;
+                    }
+                    // Sekizgen grid için mesafe kontrolü
+                    else if (isSquareGrid && distance < smallestDistance * gridSizeMultiplier)
+                    {
+                        smallestDistance = distance / gridSizeMultiplier;
+                        closestGridPosition = gridPosition;
+                        x = xIndex;
+                        y = yIndex;
+                        z = zIndex;
+                        isSquareGrid = false;
+                    }
+                }
+            }
+        }
+
+        // Eðer en yakýn grid'in mesafesi belirli bir eþik deðerden büyükse, geçersiz bir grid olarak iþaretliyoruz.
+        if (smallestDistance > baseGridSize)
+        {
+            x = -1;
+            y = -1;
+            z = -1;
+        }
     }
 }

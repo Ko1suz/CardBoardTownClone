@@ -14,9 +14,14 @@ public class test_SquareGrid : test_BaseGrid
     private Vector3 _rotateAxis;
     private float _initialRotation;
     private float gridSize = .5f;
+    public override float GetGridSizeMultiplier()
+    {
+        return gridSize;
+    }
 
     protected Vector3[] _positions;
 
+    private Vector3 originPosition;
 
     public test_SquareGrid(int x, int y, int z, float baseGridSize, bool showDebug = false) : base(x, y, z, baseGridSize)
     {
@@ -39,6 +44,10 @@ public class test_SquareGrid : test_BaseGrid
         _positions[_shapePointAmount] = _positions[0];
     }
 
+    public override Vector3 GetWorldPosition()
+    {
+        return new Vector3(x, y, (z * 2) + 1) * baseGridSize + originPosition;
+    }
     public override void DrawDebugLines(Vector3 worldPos)
     {
         if (showDebug)
@@ -49,7 +58,7 @@ public class test_SquareGrid : test_BaseGrid
             _rotateVector = Quaternion.AngleAxis(_initialRotation, _rotateAxis) * _rotateVector;
             for (int i = 0; i < _shapePointAmount; i++)
             {
-                _shapePoints[i] = _rotateVector * gridSize;
+                _shapePoints[i] = _rotateVector * gridSize; // / 1.414f;
                 _rotateVector = Quaternion.AngleAxis(360 / _shapePointAmount, _rotateAxis) * _rotateVector;
             }
             for (int i = 0; i < _shapePointAmount; i++)

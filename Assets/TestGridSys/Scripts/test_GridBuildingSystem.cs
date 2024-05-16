@@ -35,8 +35,11 @@ public class test_GridBuildingSystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            CM_Testing.GetMousePos3D();
+            //Debug.Log("Mouse Pos" + CM_Testing.GetMousePos3D());
+            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            //Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
+            Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
         }
     }
 }

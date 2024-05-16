@@ -22,4 +22,14 @@ public class test_BaseGrid
     {
 
     }
+
+    public virtual Vector3 GetWorldPosition()
+    {
+        return Vector3.zero;
+    }
+
+    public virtual float GetGridSizeMultiplier()
+    {
+        return 0f;
+    }
 }
