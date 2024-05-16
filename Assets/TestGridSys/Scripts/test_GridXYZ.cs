@@ -54,8 +54,7 @@ public class test_GridXYZ
 
     public void GetGridIndexAtWorldPosition(Vector3 worldPosition, out int x, out int y, out int z)
     {
-        float smallestDistance = float.MaxValue;
-        Vector3 closestGridPosition = Vector3.zero;
+        float smallestDistance = float.MaxValue * baseGridSize;
         bool isSquareGrid = false;
 
         // Baþlangýçta x, y, ve z deðerlerini -1 olarak atýyoruz.
@@ -77,9 +76,7 @@ public class test_GridXYZ
                     if (!isSquareGrid && distance < smallestDistance)
                     {
                         smallestDistance = distance;
-                        closestGridPosition = gridPosition;
                         x = xIndex;
-                        y = yIndex;
                         z = zIndex;
                         isSquareGrid = true;
                     }
@@ -87,22 +84,34 @@ public class test_GridXYZ
                     else if (isSquareGrid && distance < smallestDistance * gridSizeMultiplier)
                     {
                         smallestDistance = distance / gridSizeMultiplier;
-                        closestGridPosition = gridPosition;
                         x = xIndex;
-                        y = yIndex;
                         z = zIndex;
                         isSquareGrid = false;
                     }
                 }
             }
         }
+        y = Mathf.FloorToInt(worldPosition.y + 0.1f);
 
         // Eðer en yakýn grid'in mesafesi belirli bir eþik deðerden büyükse, geçersiz bir grid olarak iþaretliyoruz.
-        if (smallestDistance > baseGridSize)
+        if (isSquareGrid)
         {
-            x = -1;
-            y = -1;
-            z = -1;
+            if (smallestDistance*2 > baseGridSize)
+            {
+                x = -1;
+                y = -1;
+                z = -1;
+            }
         }
+        else
+        {
+            if (smallestDistance > baseGridSize)
+            {
+                x = -1;
+                y = -1;
+                z = -1;
+            }
+        }
+
     }
 }
