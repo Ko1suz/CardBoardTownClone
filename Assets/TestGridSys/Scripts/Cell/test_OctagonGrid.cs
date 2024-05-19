@@ -26,6 +26,7 @@ public class test_OctagonGrid : test_BaseGrid
     {
         this.showDebug = showDebug;
         this.gridSize = baseGridSize;
+        isSquareGrid = false;
         //DrawDebugLines(new Vector3(x,y,z));
     }
 

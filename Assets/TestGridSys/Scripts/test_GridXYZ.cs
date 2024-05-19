@@ -52,16 +52,29 @@ public class test_GridXYZ
         return new Vector3(x, y, (z * 2) + 1) * baseGridSize + originPosition;
     }
 
+    public Vector3 GetWorldPositionGrid(int x, int y, int z)
+    {
+        bool isSquareGrid = gridObjcets[x, y, z].isSquareGrid;
+        if (isSquareGrid)
+        {
+            return new Vector3(x, y, (z * 2) + 1) * baseGridSize + originPosition;
+        }
+        else
+        {
+            return new Vector3(x, y, z * 2) * baseGridSize + originPosition;
+        }
+    }
+
     public void GetGridIndexAtWorldPosition(Vector3 worldPosition, out int x, out int y, out int z)
     {
-        float smallestDistance = float.MaxValue * baseGridSize;
+        float octagonDistance = 0.925f * baseGridSize;
+        float squareDistance = 0.425f * baseGridSize;
         bool isSquareGrid = false;
 
         // Baþlangýçta x, y, ve z deðerlerini -1 olarak atýyoruz.
         x = -1;
-        y = -1;
         z = -1;
-
+        y = -1;
         for (int yIndex = 0; yIndex < gridObjcets.GetLength(1); yIndex++)
         {
             for (int zIndex = 0; zIndex < gridObjcets.GetLength(2); zIndex++)
@@ -69,49 +82,25 @@ public class test_GridXYZ
                 for (int xIndex = 0; xIndex < gridObjcets.GetLength(0); xIndex++)
                 {
                     Vector3 gridPosition = gridObjcets[xIndex, yIndex, zIndex].GetWorldPosition();
-                    float gridSizeMultiplier = gridObjcets[xIndex, yIndex, zIndex].GetGridSizeMultiplier();
-                    float distance = Vector3.Distance(worldPosition, gridPosition);
-
+                    float distance = Mathf.Abs(Vector3.Distance(worldPosition, gridPosition));
+                    isSquareGrid = gridObjcets[xIndex, yIndex, zIndex].isSquareGrid;
                     // Kare grid için mesafe kontrolü
-                    if (!isSquareGrid && distance < smallestDistance)
+                    if (isSquareGrid && distance < squareDistance)
                     {
-                        smallestDistance = distance;
                         x = xIndex;
                         z = zIndex;
-                        isSquareGrid = true;
+                        break;
                     }
                     // Sekizgen grid için mesafe kontrolü
-                    else if (isSquareGrid && distance < smallestDistance * gridSizeMultiplier)
+                    else if (!isSquareGrid && distance < octagonDistance)
                     {
-                        smallestDistance = distance / gridSizeMultiplier;
                         x = xIndex;
                         z = zIndex;
-                        isSquareGrid = false;
+                        break;
                     }
                 }
             }
         }
         y = Mathf.FloorToInt(worldPosition.y + 0.1f);
-
-        // Eðer en yakýn grid'in mesafesi belirli bir eþik deðerden büyükse, geçersiz bir grid olarak iþaretliyoruz.
-        if (isSquareGrid)
-        {
-            if (smallestDistance*2 > baseGridSize)
-            {
-                x = -1;
-                y = -1;
-                z = -1;
-            }
-        }
-        else
-        {
-            if (smallestDistance > baseGridSize)
-            {
-                x = -1;
-                y = -1;
-                z = -1;
-            }
-        }
-
     }
 }

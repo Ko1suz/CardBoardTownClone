@@ -285,12 +285,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e3440c064b418844a70ab189818b153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalGridCount: 1000
-  x: 10
-  y: 10
-  z: 10
-  gridCellSize: 2
+  totalGridCount: 27
+  x: 3
+  y: 3
+  z: 3
+  gridCellSize: 10
   gridPosition: {x: 0, y: 0, z: 0}
+  building: {fileID: 0}
 --- !u!1 &208060189
 GameObject:
   m_ObjectHideFlags: 0

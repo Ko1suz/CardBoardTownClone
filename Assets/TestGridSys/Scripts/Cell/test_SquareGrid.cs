@@ -27,6 +27,7 @@ public class test_SquareGrid : test_BaseGrid
     {
         this.showDebug = showDebug;
         this.gridSize = baseGridSize/2;
+        isSquareGrid = true;
         //DrawDebugLines(new Vector3(x, y, z));
     }
 

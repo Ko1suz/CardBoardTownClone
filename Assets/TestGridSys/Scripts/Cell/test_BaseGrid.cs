@@ -8,6 +8,7 @@ public class test_BaseGrid
     protected float baseGridSize = 1;
     protected Transform placedObject;
     protected bool showDebug;
+    public bool isSquareGrid;
 
     public test_BaseGrid(int x, int y, int z, float baseGridSize, bool showDebug = false) 
     {

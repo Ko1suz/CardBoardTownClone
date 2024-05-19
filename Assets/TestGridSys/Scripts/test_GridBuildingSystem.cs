@@ -25,6 +25,8 @@ public class test_GridBuildingSystem : MonoBehaviour
     public Vector3 gridPosition;
     test_GridXYZ test_GridXYZ;
 
+
+    public GameObject building;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,11 @@ public class test_GridBuildingSystem : MonoBehaviour
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
+
+            if (x >= 0)
+            {
+                Instantiate(building, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.identity);
+            }
         }
     }
 }
