@@ -30,12 +30,12 @@ public class test_GridXYZ
                 {
                     if (x <=0 || x % 2 == 0)
                     {
-                        gridObjcets[x, y, z] = new test_OctagonGrid(x, y, z, baseGridSize, y <= 0);
+                        gridObjcets[x, y, z] = new test_OctagonGrid(x, y, z, baseGridSize, y <= 5);
                         gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionOctagonGrid(x, y, z));
                     }
                     else
                     {
-                        gridObjcets[x, y, z] = new test_SquareGrid(x, y, z, baseGridSize, y <= 0);
+                        gridObjcets[x, y, z] = new test_SquareGrid(x, y, z, baseGridSize, y <= 5);
                         gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionSquareGrid(x, y, z));
                     }
                 }
@@ -69,38 +69,37 @@ public class test_GridXYZ
     {
         float octagonDistance = 0.925f * baseGridSize;
         float squareDistance = 0.425f * baseGridSize;
+        int yIndex = Mathf.FloorToInt(worldPosition.y + 0.1f);
         bool isSquareGrid = false;
 
         // Baþlangýçta x, y, ve z deðerlerini -1 olarak atýyoruz.
         x = -1;
         z = -1;
         y = -1;
-        for (int yIndex = 0; yIndex < gridObjcets.GetLength(1); yIndex++)
+        for (int zIndex = 0; zIndex < gridObjcets.GetLength(2); zIndex++)
         {
-            for (int zIndex = 0; zIndex < gridObjcets.GetLength(2); zIndex++)
+            for (int xIndex = 0; xIndex < gridObjcets.GetLength(0); xIndex++)
             {
-                for (int xIndex = 0; xIndex < gridObjcets.GetLength(0); xIndex++)
+                Vector3 gridPosition = gridObjcets[xIndex, yIndex, zIndex].GetWorldPosition();
+                float distance = Mathf.Abs(Vector3.Distance(worldPosition, gridPosition));
+                isSquareGrid = gridObjcets[xIndex, yIndex, zIndex].isSquareGrid;
+                // Kare grid için mesafe kontrolü
+                if (isSquareGrid && distance < squareDistance)
                 {
-                    Vector3 gridPosition = gridObjcets[xIndex, yIndex, zIndex].GetWorldPosition();
-                    float distance = Mathf.Abs(Vector3.Distance(worldPosition, gridPosition));
-                    isSquareGrid = gridObjcets[xIndex, yIndex, zIndex].isSquareGrid;
-                    // Kare grid için mesafe kontrolü
-                    if (isSquareGrid && distance < squareDistance)
-                    {
-                        x = xIndex;
-                        z = zIndex;
-                        break;
-                    }
-                    // Sekizgen grid için mesafe kontrolü
-                    else if (!isSquareGrid && distance < octagonDistance)
-                    {
-                        x = xIndex;
-                        z = zIndex;
-                        break;
-                    }
+                    x = xIndex;
+                    z = zIndex;
+                    break;
+                }
+                // Sekizgen grid için mesafe kontrolü
+                else if (!isSquareGrid && distance < octagonDistance)
+                {
+                    x = xIndex;
+                    z = zIndex;
+                    break;
                 }
             }
         }
-        y = Mathf.FloorToInt(worldPosition.y + 0.1f);
+
+        y = yIndex;
     }
 }
