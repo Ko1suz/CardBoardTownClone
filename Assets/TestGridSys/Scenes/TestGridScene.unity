@@ -285,10 +285,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e3440c064b418844a70ab189818b153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalGridCount: 1
-  x: 1
-  y: 1
-  z: 1
+  totalGridCount: 1331
+  x: 11
+  y: 11
+  z: 11
   gridCellSize: 1
   gridPosition: {x: 0, y: 0, z: 0}
   buildings:
