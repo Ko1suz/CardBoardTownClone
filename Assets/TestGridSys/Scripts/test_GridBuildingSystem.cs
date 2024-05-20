@@ -26,7 +26,8 @@ public class test_GridBuildingSystem : MonoBehaviour
     test_GridXYZ test_GridXYZ;
 
 
-    public GameObject building;
+    public GameObject[] buildings;
+    public int index = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +36,23 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            index = 0;
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            index = 1;
+        }
+        if (Input.GetKey(KeyCode.Alpha3))
+        {
+            index = 2;
+        }
+        if (Input.GetKey(KeyCode.Alpha4))
+        {
+            index = 3;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             CM_Testing.GetMousePos3D();
@@ -45,7 +63,7 @@ public class test_GridBuildingSystem : MonoBehaviour
 
             if (x >= 0)
             {
-                Instantiate(building, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.identity);
+                Instantiate(buildings[index], test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.identity);
             }
         }
     }

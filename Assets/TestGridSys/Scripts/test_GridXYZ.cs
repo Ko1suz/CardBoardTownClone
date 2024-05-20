@@ -30,12 +30,12 @@ public class test_GridXYZ
                 {
                     if (x <=0 || x % 2 == 0)
                     {
-                        gridObjcets[x, y, z] = new test_OctagonGrid(x, y, z, baseGridSize, y <= 5);
+                        gridObjcets[x, y, z] = new test_OctagonGrid(x, y, z, baseGridSize, y <= 0);
                         gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionOctagonGrid(x, y, z));
                     }
                     else
                     {
-                        gridObjcets[x, y, z] = new test_SquareGrid(x, y, z, baseGridSize, y <= 5);
+                        gridObjcets[x, y, z] = new test_SquareGrid(x, y, z, baseGridSize, y <= 0);
                         gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionSquareGrid(x, y, z));
                     }
                 }
