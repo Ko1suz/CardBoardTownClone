@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class test_GridXYZ 
+public class test_GridXYZ
 {
     int grid_x_lenght;
     int grid_y_lenght;
@@ -12,6 +13,14 @@ public class test_GridXYZ
     Vector3 originPosition;
 
     test_BaseGrid[,,] gridObjcets;
+
+    public event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
+    public class OnGridObjectChangedEventArgs : EventArgs
+    {
+        public int x;
+        public int y;
+        public int z;
+    }
 
     public test_GridXYZ(int grid_x_lenght, int grid_y_lenght, int grid_z_lenght, float baseGridSize, Vector3 originPosition)
     {
@@ -63,6 +72,16 @@ public class test_GridXYZ
         {
             return new Vector3(x, y, z * 2) * baseGridSize + originPosition;
         }
+    }
+
+    public test_BaseGrid GetGridObject(int x, int y, int z)
+    {
+        return gridObjcets[x, y, z];
+    }
+
+    public void TriggerGridObjectChanged(int x, int y, int z)
+    {
+        OnGridObjectChanged?.Invoke(this, new OnGridObjectChangedEventArgs { x = x, y = y, z = z });
     }
 
     public void GetGridIndexAtWorldPosition(Vector3 worldPosition, out int x, out int y, out int z)

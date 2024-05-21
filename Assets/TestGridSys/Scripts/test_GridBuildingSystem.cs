@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using CodeMonkey.Utils;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -60,11 +61,25 @@ public class test_GridBuildingSystem : MonoBehaviour
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
-
             if (x >= 0)
             {
-                Instantiate(buildings[index], test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.identity);
+                test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
+                if (test_BaseGrid.CanBuild())
+                {
+                    GameObject cloneBuilding = Instantiate(buildings[index], test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.identity);
+                    test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
+                }
+                else
+                {
+                    UtilsClass.CreateWorldTextPopup("Burada zaten bina var caným", CM_Testing.GetMousePos3D(), 5);
+                }
             }
+            else
+            {
+                UtilsClass.CreateWorldTextPopup("Buraya Bina koyamazsýn caným", CM_Testing.GetMousePos3D(), 5);
+            }
+
+
         }
     }
 }

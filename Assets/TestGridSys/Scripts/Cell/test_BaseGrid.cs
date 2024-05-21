@@ -33,4 +33,26 @@ public class test_BaseGrid
     {
         return 0f;
     }
+
+    public void SetPlacedObject(Transform placedObject)
+    {
+        this.placedObject = placedObject;
+        //grid.TriggerGridObjectChanged(x, z);
+    }
+
+    public Transform GetPlacedObjet()
+    {
+        return placedObject;
+    }
+
+    public void ClearPlacedObjcet()
+    {
+        this.placedObject = null;
+        //grid.TriggerGridObjectChanged(x, z);
+    }
+
+    public bool CanBuild()
+    {
+        return placedObject == null;
+    }
 }
