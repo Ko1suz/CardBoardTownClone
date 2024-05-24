@@ -53,11 +53,23 @@ public class test_GridBuildingSystem : MonoBehaviour
         {
             index = 3;
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+            test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y - 1, z);
+            if(!test_BaseGrid.CanBuild())
+            {
+                Destroy(test_BaseGrid.ClearPlacedObjcet());
+            }
+            else
+            {
+                UtilsClass.CreateWorldTextPopup("Burada kurulu bir þey yok :D?", CM_Testing.GetMousePos3D(), 5);
+            }
+
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
-            CM_Testing.GetMousePos3D();
-            //Debug.Log("Mouse Pos" + CM_Testing.GetMousePos3D());
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
@@ -80,6 +92,19 @@ public class test_GridBuildingSystem : MonoBehaviour
             }
 
 
+        }
+    }
+
+    float timer = 0;
+    void GetMousePosGrid()
+    {
+        timer += Time.deltaTime;
+        if (timer >= 0.1f)
+        {
+            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+            test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
+            Debug.Log("Grid Index = " + x + " " + y + " " + z);
+            timer = 0;
         }
     }
 }

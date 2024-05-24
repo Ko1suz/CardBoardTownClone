@@ -45,10 +45,12 @@ public class test_BaseGrid
         return placedObject;
     }
 
-    public void ClearPlacedObjcet()
+    public GameObject ClearPlacedObjcet()
     {
+        GameObject deletedRef = this.placedObject.gameObject;
         this.placedObject = null;
         //grid.TriggerGridObjectChanged(x, z);
+        return deletedRef;
     }
 
     public bool CanBuild()
