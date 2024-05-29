@@ -3,6 +3,7 @@ using CodeMonkey.Utils;
 using UnityEditor;
 #endif
 using UnityEngine;
+using static CM_PlacedObjectTypeSO;
 
 
 public class test_GridBuildingSystem : MonoBehaviour
@@ -26,10 +27,52 @@ public class test_GridBuildingSystem : MonoBehaviour
     public Vector3 gridPosition;
     test_GridXYZ test_GridXYZ;
 
-
+    public test_PlacebleObjectSCO test_PlacebleObjectSO;
     public GameObject[] buildings;
     public int index = 0;
+
+    private int[] directions = { 0, 45, 90, 135, 180, 225, 270, 315 };
+    [Range(0,7)]
+    public int directionindex;
+    public int directionValue;
     // Start is called before the first frame update
+
+    void Rotate()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+            test_BaseGrid gridRef = test_GridXYZ.GetGridObject(x, y, z);
+            if (!gridRef.isSquareGrid)
+            {
+                if (directionindex < 7)
+                {
+                    directionindex++;
+                }
+                else
+                {
+                    directionindex = 0;
+                }
+            }
+            else
+            {
+                if (directionindex % 2 != 0 && directionindex >= 0)
+                {
+                    directionindex--;
+                }
+                else if (directionindex < 6)
+                {
+                    directionindex += 2;
+                }
+                else
+                {
+                    directionindex = 0;
+                }
+            }
+            directionValue = directions[directionindex];
+            UtilsClass.CreateWorldTextPopup("Direction ->" + directions[directionindex], CM_Testing.GetMousePos3D(), 12);
+        } 
+    }
     void Start()
     {
         test_GridXYZ = new test_GridXYZ(x, y, z, gridCellSize, gridPosition);
@@ -78,7 +121,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
                 if (test_BaseGrid.CanBuild())
                 {
-                    GameObject cloneBuilding = Instantiate(buildings[index], test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.identity);
+                    GameObject cloneBuilding = Instantiate(buildings[index], test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0,directionValue,0));
                     test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
                 }
                 else
@@ -90,22 +133,25 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 UtilsClass.CreateWorldTextPopup("Buraya Bina koyamazsýn caným", CM_Testing.GetMousePos3D(), 5);
             }
-
-
         }
+
+        Rotate();
     }
 
     float timer = 0;
-    void GetMousePosGrid()
+    test_BaseGrid GetMousePosGrid()
     {
         timer += Time.deltaTime;
+        test_BaseGrid test_BaseGrid = default;
         if (timer >= 0.1f)
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
+            test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
             Debug.Log("Grid Index = " + x + " " + y + " " + z);
             timer = 0;
         }
+
+        return test_BaseGrid;
     }
 }
 
