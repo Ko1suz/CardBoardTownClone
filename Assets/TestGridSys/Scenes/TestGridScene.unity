@@ -291,6 +291,7 @@ MonoBehaviour:
   z: 21
   gridCellSize: 1
   gridPosition: {x: 0, y: 0, z: 0}
+  buildMode: 0
   test_PlacebleObjectSO: {fileID: 11400000, guid: df4573b74017cb647acb7e171d48ff39,
     type: 2}
   buildings:
@@ -791,7 +792,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0

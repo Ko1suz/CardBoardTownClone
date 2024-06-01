@@ -27,7 +27,9 @@ public class test_GridBuildingSystem : MonoBehaviour
     public Vector3 gridPosition;
     test_GridXYZ test_GridXYZ;
 
+    public bool buildMode = false;
     public test_PlacebleObjectSCO test_PlacebleObjectSO;
+    GameObject visualClone;
     public GameObject[] buildings;
     public int index = 0;
 
@@ -37,42 +39,6 @@ public class test_GridBuildingSystem : MonoBehaviour
     public int directionValue;
     // Start is called before the first frame update
 
-    void Rotate()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            test_BaseGrid gridRef = test_GridXYZ.GetGridObject(x, y, z);
-            if (!gridRef.isSquareGrid)
-            {
-                if (directionindex < 7)
-                {
-                    directionindex++;
-                }
-                else
-                {
-                    directionindex = 0;
-                }
-            }
-            else
-            {
-                if (directionindex % 2 != 0 && directionindex >= 0)
-                {
-                    directionindex--;
-                }
-                else if (directionindex < 6)
-                {
-                    directionindex += 2;
-                }
-                else
-                {
-                    directionindex = 0;
-                }
-            }
-            directionValue = directions[directionindex];
-            UtilsClass.CreateWorldTextPopup("Direction ->" + directions[directionindex], CM_Testing.GetMousePos3D(), 12);
-        } 
-    }
     void Start()
     {
         test_GridXYZ = new test_GridXYZ(x, y, z, gridCellSize, gridPosition);
@@ -80,6 +46,8 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     private void Update()
     {
+        SetBuildMode();
+        BuildingGhost();
         if (Input.GetKey(KeyCode.Alpha1))
         {
             index = 0;
@@ -138,20 +106,97 @@ public class test_GridBuildingSystem : MonoBehaviour
         Rotate();
     }
 
-    float timer = 0;
     test_BaseGrid GetMousePosGrid()
     {
-        timer += Time.deltaTime;
         test_BaseGrid test_BaseGrid = default;
-        if (timer >= 0.1f)
-        {
-            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
-            Debug.Log("Grid Index = " + x + " " + y + " " + z);
-            timer = 0;
-        }
+
+        test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+        test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
+        Debug.Log("Grid Index = " + x + " " + y + " " + z);
 
         return test_BaseGrid;
+    }
+    void SetBuildMode()
+    {
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            if (!buildMode)
+            {
+                buildMode = true;
+            }
+            else
+            {
+                buildMode = false;
+                Destroy(visualClone);
+                visualClone = null;
+            }
+        }
+    }
+    void BuildingGhost()
+    {
+        if (buildMode)
+        {
+            test_BaseGrid test_BaseGridRef = GetMousePosGrid();
+            if (visualClone == null)
+            {
+                visualClone = Instantiate(test_PlacebleObjectSO.visual.gameObject);
+            }
+            if (test_BaseGridRef.isSquareGrid && !test_PlacebleObjectSO.isSquare)
+            {
+                Renderer renderer = visualClone.GetComponent<Renderer>();
+                Material material = renderer.material;
+                material.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5.8f));
+            }
+            else
+            {
+                float green = 191;
+                float red = 0;
+                float blue = 190;
+                Color blueEmmisonColor = new Color(red/255f, green/255f, blue/255f);
+                Renderer renderer = visualClone.GetComponent<Renderer>();
+                Material material = renderer.material;
+                material.SetColor("_EmissionColor", blueEmmisonColor * Mathf.LinearToGammaSpace(5.8f));
+            }
+            visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, test_BaseGridRef.GetWorldPosition(), Time.deltaTime * 10);
+            visualClone.transform.rotation = Quaternion.Lerp(visualClone.transform.rotation, Quaternion.Euler(0, directions[directionindex],0), Time.deltaTime * 5);
+        }
+    }
+
+    void Rotate()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+            test_BaseGrid gridRef = test_GridXYZ.GetGridObject(x, y, z);
+            if (!gridRef.isSquareGrid)
+            {
+                if (directionindex < 7)
+                {
+                    directionindex++;
+                }
+                else
+                {
+                    directionindex = 0;
+                }
+            }
+            else
+            {
+                if (directionindex % 2 != 0 && directionindex >= 0)
+                {
+                    directionindex--;
+                }
+                else if (directionindex < 6)
+                {
+                    directionindex += 2;
+                }
+                else
+                {
+                    directionindex = 0;
+                }
+            }
+            directionValue = directions[directionindex];
+            UtilsClass.CreateWorldTextPopup("Direction ->" + directions[directionindex], CM_Testing.GetMousePos3D(), 12);
+        }
     }
 }
 
