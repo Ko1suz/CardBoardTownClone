@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebc03598e9e1ac34f80fe9de73bd2c36, type: 3}
-  m_Name: Test
+  m_Name: Test_1
   m_EditorClassIdentifier: 
   nameString: TestBuilding
   uiImage: {fileID: 0}

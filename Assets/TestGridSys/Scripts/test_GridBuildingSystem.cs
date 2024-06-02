@@ -28,9 +28,8 @@ public class test_GridBuildingSystem : MonoBehaviour
     test_GridXYZ test_GridXYZ;
 
     public bool buildMode = false;
-    public test_PlacebleObjectSCO test_PlacebleObjectSO;
+    public test_PlacebleObjectSCO[] test_PlacebleObjectSOs;
     GameObject visualClone;
-    public GameObject[] buildings;
     public int index = 0;
 
     private int[] directions = { 0, 45, 90, 135, 180, 225, 270, 315 };
@@ -51,18 +50,26 @@ public class test_GridBuildingSystem : MonoBehaviour
         if (Input.GetKey(KeyCode.Alpha1))
         {
             index = 0;
+            Destroy(visualClone);
+            visualClone = null;
         }
         if (Input.GetKey(KeyCode.Alpha2))
         {
             index = 1;
+            Destroy(visualClone);
+            visualClone = null;
         }
         if (Input.GetKey(KeyCode.Alpha3))
         {
             index = 2;
+            Destroy(visualClone);
+            visualClone = null;
         }
         if (Input.GetKey(KeyCode.Alpha4))
         {
             index = 3;
+            Destroy(visualClone);
+            visualClone = null;
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -79,17 +86,22 @@ public class test_GridBuildingSystem : MonoBehaviour
 
         }
 
+        Rotate();
+    }
+
+    void SetBuilding(bool canIPlace)
+    {
         if (Input.GetMouseButtonDown(0))
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
-            if (x >= 0)
+            if (x >= 0 && canIPlace)
             {
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
                 if (test_BaseGrid.CanBuild())
                 {
-                    GameObject cloneBuilding = Instantiate(buildings[index], test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0,directionValue,0));
+                    GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
                     test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
                 }
                 else
@@ -102,8 +114,6 @@ public class test_GridBuildingSystem : MonoBehaviour
                 UtilsClass.CreateWorldTextPopup("Buraya Bina koyamazsýn caným", CM_Testing.GetMousePos3D(), 5);
             }
         }
-
-        Rotate();
     }
 
     test_BaseGrid GetMousePosGrid()
@@ -139,13 +149,14 @@ public class test_GridBuildingSystem : MonoBehaviour
             test_BaseGrid test_BaseGridRef = GetMousePosGrid();
             if (visualClone == null)
             {
-                visualClone = Instantiate(test_PlacebleObjectSO.visual.gameObject);
+                visualClone = Instantiate(test_PlacebleObjectSOs[index].visual.gameObject, CM_Testing.GetMousePos3D(), Quaternion.Euler(0, directions[directionindex],0));
             }
-            if (test_BaseGridRef.isSquareGrid && !test_PlacebleObjectSO.isSquare)
+            if (test_BaseGridRef.isSquareGrid && !test_PlacebleObjectSOs[index].isSquare)
             {
                 Renderer renderer = visualClone.GetComponent<Renderer>();
                 Material material = renderer.material;
                 material.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5.8f));
+                SetBuilding(false);
             }
             else
             {
@@ -156,6 +167,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                 Renderer renderer = visualClone.GetComponent<Renderer>();
                 Material material = renderer.material;
                 material.SetColor("_EmissionColor", blueEmmisonColor * Mathf.LinearToGammaSpace(5.8f));
+                SetBuilding(true);
             }
             visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, test_BaseGridRef.GetWorldPosition(), Time.deltaTime * 10);
             visualClone.transform.rotation = Quaternion.Lerp(visualClone.transform.rotation, Quaternion.Euler(0, directions[directionindex],0), Time.deltaTime * 5);
@@ -164,7 +176,7 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     void Rotate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && buildMode)
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             test_BaseGrid gridRef = test_GridXYZ.GetGridObject(x, y, z);
