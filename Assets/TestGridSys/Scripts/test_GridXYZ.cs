@@ -76,7 +76,14 @@ public class test_GridXYZ
 
     public test_BaseGrid GetGridObject(int x, int y, int z)
     {
-        return gridObjcets[x, y, z];
+        if (x>=0 && z>=0 && x < grid_x_lenght && z < grid_z_lenght)
+        {
+            return gridObjcets[x, y, z];
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void TriggerGridObjectChanged(int x, int y, int z)

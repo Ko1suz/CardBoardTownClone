@@ -40,9 +40,28 @@ public class test_BaseGrid
         //grid.TriggerGridObjectChanged(x, z);
     }
 
+    public bool CheckPlacedObject()
+    {
+        if (placedObject == null){ return true; }
+        else{ return false; }
+    }
+
     public Transform GetPlacedObjet()
     {
         return placedObject;
+    }
+
+    public int GetXIndex()
+    {
+        return x;
+    }
+    public int GetYIndex()
+    {
+        return y;
+    }
+    public int GetZIndex()
+    {
+        return z;
     }
 
     public GameObject ClearPlacedObjcet()
