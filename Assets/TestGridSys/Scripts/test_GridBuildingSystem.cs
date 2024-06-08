@@ -99,7 +99,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             if (x >= 0 && canIPlace)
             {
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
-                if (CheckGrid(x,y,z))
+                if (CheclAllConditions(x,y,z))
                 {
                     GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
                     test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
@@ -127,21 +127,67 @@ public class test_GridBuildingSystem : MonoBehaviour
         return test_BaseGrid;
     }
 
-    // x+1  x-1 z+1 z-1
-    bool CheckGrid(int xIndex, int yIndex, int zIndex)
+
+    bool CheclAllConditions(int xIndex, int yIndex, int zIndex)
+    {
+        if (CheckGridAndBuildingType(xIndex, yIndex, zIndex) &&
+        CheckBuildingBorders(yIndex) &&
+        CheckGridItSelf(xIndex, yIndex, zIndex) &&
+        CheckSideGrids(xIndex, yIndex, zIndex))
+        {
+            return true;
+        }
+        else { return false; }
+    }
+
+    // Bina ve Grid Tipini kontrol ediyor
+    bool CheckGridAndBuildingType(int xIndex, int yIndex, int zIndex)
+    {
+        test_BaseGrid gridRef;
+        gridRef = test_GridXYZ.GetGridObject(xIndex, yIndex, zIndex);
+        if (gridRef.isSquareGrid && !test_PlacebleObjectSOs[index].isSquare)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    // Bina Index Yuksekliðini Kontrol ediyor
+    bool CheckBuildingBorders(int yIndex)
+    {
+        if (yIndex >= test_PlacebleObjectSOs[index].minPlaceIndexs.y &&  yIndex <= test_PlacebleObjectSOs[index].maxPlaceIndexs.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    // Seçili Gridin Boþ olup olmadýðýný kontrol ediyor
+    bool CheckGridItSelf(int xIndex, int yIndex, int zIndex)
+    {
+        test_BaseGrid gridRef;
+        gridRef = test_GridXYZ.GetGridObject(xIndex, yIndex, zIndex);
+        if (gridRef.CheckPlacedObject())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    // Gridin 4 farklý yönünde ki diðer gridleri kontrol ediyor eðer seçili Bina tipi Sekizgen ise 
+    // Ve orda etrafýnda baþka sekizgen bina varsa oraya bina koyulmuyor
+    bool CheckSideGrids(int xIndex, int yIndex, int zIndex)
     {
         int isPlaceble = 0;
         test_BaseGrid gridRef;
         gridRef = test_GridXYZ.GetGridObject(xIndex, yIndex, zIndex);
-        if (gridRef.CanBuild())
-        {
-            isPlaceble++;
-        }
 
-        if (!gridRef.isSquareGrid && !test_PlacebleObjectSOs[index].isSquare)
-        {
-            isPlaceble++;
-        }
         for (int x = -2 + xIndex; x <= 2 + xIndex; x += 4)
         {
             gridRef = test_GridXYZ.GetGridObject(x, yIndex, zIndex);
@@ -150,7 +196,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
-            else if (gridRef.CheckPlacedObject())
+            else if (gridRef.CheckPlacedObject() || test_PlacebleObjectSOs[index].isSquare)
             {
                 isPlaceble++;
             }
@@ -163,13 +209,13 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
-            else if (gridRef.CheckPlacedObject())
+            else if (gridRef.CheckPlacedObject() || test_PlacebleObjectSOs[index].isSquare)
             {
                 isPlaceble++;
             }
         }
         Debug.LogWarning("Boþ alan = " + isPlaceble);
-        if (isPlaceble >=6){ return true; }
+        if (isPlaceble >=4){ return true; }
         else { return false; }
     }
 
@@ -204,7 +250,8 @@ public class test_GridBuildingSystem : MonoBehaviour
                 {
                     visualClone = Instantiate(test_PlacebleObjectSOs[index].visual.gameObject, CM_Testing.GetMousePos3D(), Quaternion.Euler(0, directions[directionindex], 0));
                 }
-                if (!CheckGrid(gridRef.GetXIndex(), gridRef.GetYIndex(), gridRef.GetZIndex()))
+              
+                if (!CheclAllConditions(gridRef.GetXIndex(), gridRef.GetYIndex(), gridRef.GetZIndex()))
                 {
                     Renderer renderer = visualClone.GetComponent<Renderer>();
                     Material material = renderer.material;
