@@ -17,6 +17,12 @@ public class test_PlacebleObjectSCO : ScriptableObject
     public bool isSquare = false;
     public Vector3 minPlaceIndexs;
     public Vector3 maxPlaceIndexs = new Vector3(99,99,99);
+
+    [Header("BuildingCost")]
+    public float lifeSupportMat = 0;
+    public float structureMat = 0;
+    public float energyMat = 0;
+    public float conductiveMat = 0;
     //public int[] directions = { 0, 45, 90, 135, 180, 225, 270, 315 };
-    
+
 }

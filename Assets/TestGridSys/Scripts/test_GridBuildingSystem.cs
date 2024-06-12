@@ -99,7 +99,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             if (x >= 0 && canIPlace)
             {
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
-                if (CheclAllConditions(x,y,z))
+                if (CheclAllConditions(x,y,z, true))
                 {
                     GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
                     test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
@@ -111,7 +111,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             }
             else
             {
-                UtilsClass.CreateWorldTextPopup("Buraya Bina koyamazsýn caným", CM_Testing.GetMousePos3D(), 5);
+                //UtilsClass.CreateWorldTextPopup("Buraya Bina koyamazsýn caným", CM_Testing.GetMousePos3D(), 5);
             }
         }
     }
@@ -128,12 +128,13 @@ public class test_GridBuildingSystem : MonoBehaviour
     }
 
 
-    bool CheclAllConditions(int xIndex, int yIndex, int zIndex)
+    bool CheclAllConditions(int xIndex, int yIndex, int zIndex, bool setResources = false)
     {
         if (CheckGridAndBuildingType(xIndex, yIndex, zIndex) &&
         CheckBuildingBorders(yIndex) &&
         CheckGridItSelf(xIndex, yIndex, zIndex) &&
-        CheckSideGrids(xIndex, yIndex, zIndex))
+        CheckSideGrids(xIndex, yIndex, zIndex) &&
+        GameManager.GetGameManagerInstance.CheckBuildingCost(test_PlacebleObjectSOs[index], setResources))
         {
             return true;
         }
