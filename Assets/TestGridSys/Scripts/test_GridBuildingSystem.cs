@@ -1,8 +1,10 @@
 #if UNITY_EDITOR
 using CodeMonkey.Utils;
+using System;
 using UnityEditor;
 #endif
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static CM_PlacedObjectTypeSO;
 
 
@@ -38,15 +40,40 @@ public class test_GridBuildingSystem : MonoBehaviour
     public int directionValue;
     // Start is called before the first frame update
 
+    private int selectedX = 0;
+    private int selectedY = 0;
+    private int selectedZ = 0;
+    private bool canIplace = false;
+
+
+    public event EventHandler OnSelectingGridChange;
+
+    void CheckSelectedGridChange()
+    {
+        test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+        if (selectedX != x || selectedY != y || selectedZ != z)
+        {
+            Debug.LogError("Test Event");
+            OnSelectingGridChange?.Invoke(this, EventArgs.Empty);
+            selectedX = x;  
+            selectedY = y;
+            selectedZ = z;
+
+        }
+    }
+
     void Start()
     {
         test_GridXYZ = new test_GridXYZ(x, y, z, gridCellSize, gridPosition);
+        OnSelectingGridChange += CheckConditons;
     }
 
     private void Update()
     {
+        CheckSelectedGridChange();
         SetBuildMode();
         BuildingGhost();
+        SetBuilding(canIplace);
         if (Input.GetKey(KeyCode.Alpha1))
         {
             index = 0;
@@ -118,10 +145,13 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     test_BaseGrid GetMousePosGrid()
     {
-        test_BaseGrid test_BaseGrid = default;
+        test_BaseGrid test_BaseGrid = null;
 
         test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-        test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
+        if (x>0)
+        {
+            test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
+        }
         Debug.Log("Grid Index = " + x + " " + y + " " + z);
 
         return test_BaseGrid;
@@ -251,13 +281,13 @@ public class test_GridBuildingSystem : MonoBehaviour
                 {
                     visualClone = Instantiate(test_PlacebleObjectSOs[index].visual.gameObject, CM_Testing.GetMousePos3D(), Quaternion.Euler(0, directions[directionindex], 0));
                 }
-              
-                if (!CheclAllConditions(gridRef.GetXIndex(), gridRef.GetYIndex(), gridRef.GetZIndex()))
+
+                if (!canIplace)
                 {
                     Renderer renderer = visualClone.GetComponent<Renderer>();
                     Material material = renderer.material;
                     material.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5.8f));
-                    SetBuilding(false);
+                    //SetBuilding(false);
                 }
                 else
                 {
@@ -268,8 +298,9 @@ public class test_GridBuildingSystem : MonoBehaviour
                     Renderer renderer = visualClone.GetComponent<Renderer>();
                     Material material = renderer.material;
                     material.SetColor("_EmissionColor", blueEmmisonColor * Mathf.LinearToGammaSpace(5.8f));
-                    SetBuilding(true);
+                    //SetBuilding(true);
                 }
+
                 visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, gridRef.GetWorldPosition(), Time.deltaTime * 10);
                 visualClone.transform.rotation = Quaternion.Lerp(visualClone.transform.rotation, Quaternion.Euler(0, directions[directionindex], 0), Time.deltaTime * 5);
             }
@@ -280,6 +311,22 @@ public class test_GridBuildingSystem : MonoBehaviour
                     visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, last_GridRefPos, Time.deltaTime * 10);
                 }
             }
+        }
+    }
+    public void CheckConditons(object sender, EventArgs e)
+    {
+        test_BaseGrid gridRef = GetMousePosGrid();
+        if (gridRef == null)
+        {
+            canIplace = false;
+        }
+        else if (!CheclAllConditions(gridRef.GetXIndex(), gridRef.GetYIndex(), gridRef.GetZIndex()))
+        {
+            canIplace = false;
+        }
+        else
+        {
+            canIplace = true;
         }
     }
 

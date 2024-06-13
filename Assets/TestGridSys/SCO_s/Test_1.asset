@@ -20,5 +20,9 @@ MonoBehaviour:
   y_size: 1
   z_size: 1
   isSquare: 0
-  minPlaceIndexs: {x: 0, y: 1, z: 0}
+  minPlaceIndexs: {x: 0, y: 0, z: 0}
   maxPlaceIndexs: {x: 99, y: 99, z: 99}
+  lifeSupportMat: 1
+  structureMat: 1
+  energyMat: 1
+  conductiveMat: 1

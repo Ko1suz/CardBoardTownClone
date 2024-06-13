@@ -718,10 +718,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae85368227cdab94aa968b9c373d946e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeSupportMat: 0
-  structureMat: 0
-  energyMat: 0
-  conductiveMat: 0
+  lifeSupportMat: 3
+  structureMat: 3
+  energyMat: 3
+  conductiveMat: 3
   matCapacity: 0
   researchPoint: 0
   settlersMorale: 0
