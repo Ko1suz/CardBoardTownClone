@@ -28,6 +28,7 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     public Vector3 gridPosition;
     test_GridXYZ test_GridXYZ;
+    public test_GridXYZ GetGridXYZ { get => test_GridXYZ; }
 
     public bool buildMode = false;
     public test_PlacebleObjectSCO[] test_PlacebleObjectSOs;
@@ -58,7 +59,14 @@ public class test_GridBuildingSystem : MonoBehaviour
             selectedX = x;  
             selectedY = y;
             selectedZ = z;
-
+        }
+    }
+    void CheckSelectedGridChange(bool eventFire = false)
+    {
+        if (eventFire)
+        {
+            Debug.LogError("Test Event");
+            OnSelectingGridChange?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -79,24 +87,28 @@ public class test_GridBuildingSystem : MonoBehaviour
             index = 0;
             Destroy(visualClone);
             visualClone = null;
+            CheckSelectedGridChange(true);
         }
         if (Input.GetKey(KeyCode.Alpha2))
         {
             index = 1;
             Destroy(visualClone);
             visualClone = null;
+            CheckSelectedGridChange(true);
         }
         if (Input.GetKey(KeyCode.Alpha3))
         {
             index = 2;
             Destroy(visualClone);
             visualClone = null;
+            CheckSelectedGridChange(true);
         }
         if (Input.GetKey(KeyCode.Alpha4))
         {
             index = 3;
             Destroy(visualClone);
             visualClone = null;
+            CheckSelectedGridChange(true);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -128,7 +140,8 @@ public class test_GridBuildingSystem : MonoBehaviour
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
                 if (CheclAllConditions(x,y,z, true))
                 {
-                    GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
+                    //GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
+                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), directionValue, test_PlacebleObjectSOs[index], test_GridXYZ);
                     test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
                 }
                 else
@@ -148,7 +161,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         test_BaseGrid test_BaseGrid = null;
 
         test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-        if (x>0)
+        if (x>=0)
         {
             test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
         }
@@ -231,6 +244,10 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
+            else if (gridRef.GetPlacedObjet().GetComponent<test_PlacebleObject>().isSquare)
+            {
+                isPlaceble++;
+            }
         }
         for (int z = -1 + zIndex; z <= 1 + zIndex; z += 2)
         {
@@ -241,6 +258,10 @@ public class test_GridBuildingSystem : MonoBehaviour
                 isPlaceble++;
             }
             else if (gridRef.CheckPlacedObject() || test_PlacebleObjectSOs[index].isSquare)
+            {
+                isPlaceble++;
+            }
+            else if (gridRef.GetPlacedObjet().GetComponent<test_PlacebleObject>().isSquare)
             {
                 isPlaceble++;
             }
@@ -267,6 +288,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         }
     }
     Vector3 last_GridRefPos = Vector3.zero;
+
     void BuildingGhost()
     {
         if (buildMode)
@@ -281,26 +303,6 @@ public class test_GridBuildingSystem : MonoBehaviour
                 {
                     visualClone = Instantiate(test_PlacebleObjectSOs[index].visual.gameObject, CM_Testing.GetMousePos3D(), Quaternion.Euler(0, directions[directionindex], 0));
                 }
-
-                if (!canIplace)
-                {
-                    Renderer renderer = visualClone.GetComponent<Renderer>();
-                    Material material = renderer.material;
-                    material.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5.8f));
-                    //SetBuilding(false);
-                }
-                else
-                {
-                    float green = 191;
-                    float red = 0;
-                    float blue = 190;
-                    Color blueEmmisonColor = new Color(red / 255f, green / 255f, blue / 255f);
-                    Renderer renderer = visualClone.GetComponent<Renderer>();
-                    Material material = renderer.material;
-                    material.SetColor("_EmissionColor", blueEmmisonColor * Mathf.LinearToGammaSpace(5.8f));
-                    //SetBuilding(true);
-                }
-
                 visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, gridRef.GetWorldPosition(), Time.deltaTime * 10);
                 visualClone.transform.rotation = Quaternion.Lerp(visualClone.transform.rotation, Quaternion.Euler(0, directions[directionindex], 0), Time.deltaTime * 5);
             }
@@ -311,6 +313,29 @@ public class test_GridBuildingSystem : MonoBehaviour
                     visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, last_GridRefPos, Time.deltaTime * 10);
                 }
             }
+
+            if (visualClone != null)
+            {
+                if (canIplace)
+                {
+                    float green = 191;
+                    float red = 0;
+                    float blue = 190;
+                    Color blueEmmisonColor = new Color(red / 255f, green / 255f, blue / 255f);
+                    Renderer renderer = visualClone.GetComponent<Renderer>();
+                    Material material = renderer.material;
+                    material.SetColor("_EmissionColor", blueEmmisonColor * Mathf.LinearToGammaSpace(5.8f));
+                    //SetBuilding(true);
+                }
+                else
+                {
+                    Renderer renderer = visualClone.GetComponent<Renderer>();
+                    Material material = renderer.material;
+                    material.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5.8f));
+                    //SetBuilding(false);
+                }
+            }
+          
         }
     }
     public void CheckConditons(object sender, EventArgs e)
