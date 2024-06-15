@@ -26,3 +26,7 @@ MonoBehaviour:
   structureMat: 1
   energyMat: 1
   conductiveMat: 1
+  ConnectionDirections: 5a0000003b010000
+  produced: 0
+  productionValue: 1
+  productionTime: 5

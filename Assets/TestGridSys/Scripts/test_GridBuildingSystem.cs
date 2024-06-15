@@ -140,8 +140,11 @@ public class test_GridBuildingSystem : MonoBehaviour
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
                 if (CheclAllConditions(x,y,z, true))
                 {
+                    int xIndex = test_BaseGrid.GetXIndex();
+                    int yIndex = test_BaseGrid.GetYIndex();
+                    int zIndex = test_BaseGrid.GetZIndex();
                     //GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
-                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), directionValue, test_PlacebleObjectSOs[index], test_GridXYZ);
+                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), new Vector3(xIndex,yIndex,zIndex), directionValue, test_PlacebleObjectSOs[index], test_GridXYZ);
                     test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
                 }
                 else
