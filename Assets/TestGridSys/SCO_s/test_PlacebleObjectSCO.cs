@@ -1,14 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu()]
 public class test_PlacebleObjectSCO : ScriptableObject
 {
-    
-
     public string nameString;
     public Image uiImage;
     public Transform prefab;
@@ -26,7 +21,7 @@ public class test_PlacebleObjectSCO : ScriptableObject
     public float structureMat = 0;
     public float energyMat = 0;
     public float conductiveMat = 0;
-    public int[] ConnectionDirections;
+    public ConnectionPoint[] connectionPoints;
     public enum Produced { LifeSupportMat, StructureMat, EnergyMat, ConductiveMat, ResearchPoint, Morale, MatCapacity, nullProduce}
     public Produced produced = Produced.nullProduce;
     public float productionValue = 1;
@@ -76,4 +71,16 @@ public class test_PlacebleObjectSCO : ScriptableObject
             Gm.matCapacity -= productionValue;
         }
     }
+
+    public void ConnectionPoints()
+    {
+
+    }
+}
+
+[System.Serializable]
+public struct ConnectionPoint
+{
+    public Vector3[] connectionPointsPosition;
+    public int[] connectionPointsRotation;
 }

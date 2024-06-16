@@ -26,7 +26,13 @@ MonoBehaviour:
   structureMat: 1
   energyMat: 1
   conductiveMat: 1
-  ConnectionDirections: 5a0000003b010000
+  connectionPoints:
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 5a000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 3b010000
   produced: 0
   productionValue: 1
   productionTime: 5

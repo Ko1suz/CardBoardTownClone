@@ -7,12 +7,22 @@ public class test_PlacebleObject : MonoBehaviour
     test_PlacebleObjectSCO test_PlacebleObjectSCO;
     Vector3 worldPos;
     Vector3 gridIndex;
+    Vector3[] gridIndex_s;
     int dir;
+    
     public bool isSquare = false;
+
+    [SerializeField] bool thisIsBase = false;
+    [SerializeField] bool isConnectionActive = false;
 
     test_GridXYZ grid;
 
-    public static test_PlacebleObject Create(Vector3 worldPos, Vector3 gridIndex, int direction, test_PlacebleObjectSCO test_PlacebleObjectSCO, test_GridXYZ grid)
+    private void Awake()
+    {
+        if (thisIsBase) { isConnectionActive = true; }
+    }
+
+    public static test_PlacebleObject Create(Vector3 worldPos, Vector3 gridIndex, int direction, test_PlacebleObjectSCO test_PlacebleObjectSCO, test_GridXYZ grid, bool thisIsBase = false)
     {
         Transform placedObjectTransform = Instantiate(test_PlacebleObjectSCO.prefab, worldPos, Quaternion.Euler(0,direction,0));
         test_PlacebleObject test_PlacebleObject = placedObjectTransform.GetComponent<test_PlacebleObject>();
@@ -23,6 +33,9 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.grid = grid;
         test_PlacebleObject.isSquare = test_PlacebleObjectSCO.isSquare;
         test_PlacebleObject.gridIndex = gridIndex;
+        test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
+        test_PlacebleObject.thisIsBase = thisIsBase;
+        test_PlacebleObject.CheckConnectionGrid();
 
         return test_PlacebleObject;
     }
@@ -34,9 +47,9 @@ public class test_PlacebleObject : MonoBehaviour
        Produce(IsBuildingActive());
     }
 
-    bool IsBuildingActive()
+    public bool IsBuildingActive()
     {
-        if (true)
+        if (isConnectionActive)
         {
             return true;
         }
@@ -72,7 +85,28 @@ public class test_PlacebleObject : MonoBehaviour
 
     void CheckConnectionGrid()
     {
+        test_BaseGrid cell = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
+        for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
+        {
+            Vector3 Index = gridIndex + test_PlacebleObjectSCO.connectionPoints[i].connectionPointsPosition[0] +
+                GetRotationSideIndex(test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0], cell.isSquareGrid);
 
+            Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
+
+            test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);
+            if (gridObj != null)
+            {
+                Transform placebleObjTransform = gridObj.GetPlacedObjet();
+                if (placebleObjTransform != null)
+                {
+                    test_PlacebleObject placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
+                    if (placebleObj.IsBuildingActive())
+                    {
+                        isConnectionActive = true;
+                    }
+                }
+            }
+        }
     }
 
     public void DestroySelf()
@@ -80,5 +114,56 @@ public class test_PlacebleObject : MonoBehaviour
         test_BaseGrid test_BaseGrid = grid.GetGridObject((int)worldPos.x, (int)worldPos.y, (int)worldPos.z);
         ProduceBack();
         Destroy(test_BaseGrid.ClearPlacedObjcet());
+    }
+
+    public Vector3 GetRotationSideIndex(int connectPointDirection, bool isSquareGrid = false)
+    {
+        int connectPointDir = dir + connectPointDirection;
+        if (connectPointDir >= 360)
+        {
+            connectPointDir -= 360;
+        }
+        Debug.LogError("Baðlantý noktasýnýn baktýðý rotasyon" + connectPointDir);
+        if (isSquareGrid)
+        {
+            switch (connectPointDir)
+            {
+                case 45:
+                    return new Vector3(-1, 0, 0);
+                case 135:
+                    return new Vector3(-1, 0, 1);
+                case 225:
+                    return new Vector3(1, 0, 1);
+                case 315:
+                    return new Vector3(1, 0, 0);
+                default:
+                    return new Vector3(0, 0, 0);
+            }
+        }
+        else
+        {
+            switch (connectPointDir)
+            {
+                case 0:
+                    return new Vector3(0, 0, -1);
+                case 45:
+                    return new Vector3(-1, 0, -1);
+                case 90:
+                    return new Vector3(-2, 0, 0);
+                case 135:
+                    return new Vector3(-1, 0, 0);
+                case 180:
+                    return new Vector3(0, 0, 1);
+                case 225:
+                    return new Vector3(1, 0, 0);
+                case 270:
+                    return new Vector3(2, 0, 0);
+                case 315:
+                    return new Vector3(1, 0, -1);
+                default:
+                    return new Vector3(0, 0, 0);
+            }
+        }
+       
     }
 }

@@ -22,3 +22,17 @@ MonoBehaviour:
   isSquare: 1
   minPlaceIndexs: {x: 0, y: 0, z: 0}
   maxPlaceIndexs: {x: 99, y: 99, z: 99}
+  lifeSupportMat: 0
+  structureMat: 0
+  energyMat: 0
+  conductiveMat: 0
+  connectionPoints:
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 5a000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 0e010000
+  produced: 7
+  productionValue: 1
+  productionTime: 12

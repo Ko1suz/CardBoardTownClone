@@ -238,7 +238,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         for (int x = -2 + xIndex; x <= 2 + xIndex; x += 4)
         {
             gridRef = test_GridXYZ.GetGridObject(x, yIndex, zIndex);
-            Debug.LogWarning("Kontrol edilen x =" + x);
+            //Debug.LogWarning("Kontrol edilen x =" + x);
             if (gridRef == null)
             {
                 isPlaceble++;
@@ -255,7 +255,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         for (int z = -1 + zIndex; z <= 1 + zIndex; z += 2)
         {
             gridRef = test_GridXYZ.GetGridObject(xIndex, yIndex, z);
-            Debug.LogWarning("Kontrol edilen z =" + z);
+            //Debug.LogWarning("Kontrol edilen z =" + z);
             if (gridRef == null)
             {
                 isPlaceble++;
