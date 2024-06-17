@@ -671,7 +671,7 @@ MonoBehaviour:
   minXRotation: 10
   maxXRotation: 60
   moveSpeed: 10
-  edgeDistance: 0
+  edgeDistance: -5
   centerPoint: {x: 20, y: 0, z: 15}
   maxDistance: 25
 --- !u!1 &1357249616

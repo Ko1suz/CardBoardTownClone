@@ -116,7 +116,8 @@ public class test_GridBuildingSystem : MonoBehaviour
             test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y - 1, z);
             if(!test_BaseGrid.CanBuild())
             {
-                Destroy(test_BaseGrid.ClearPlacedObjcet());
+                //Destroy(test_BaseGrid.ClearPlacedObjcet());
+                test_BaseGrid.GetPlacedObjet().GetComponent<test_PlacebleObject>().DestroySelf();
             }
             else
             {

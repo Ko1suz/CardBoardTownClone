@@ -15,6 +15,9 @@ public class test_PlacebleObject : MonoBehaviour
     [SerializeField] bool thisIsBase = false;
     [SerializeField] bool isConnectionActive = false;
 
+    Vector3[] connectionGridsRefs;
+    [HideInInspector] public Vector3[] GetConnectionGridRefs() { return connectionGridsRefs; }
+
     test_GridXYZ grid;
 
     private void Awake()
@@ -83,15 +86,20 @@ public class test_PlacebleObject : MonoBehaviour
         workOnce = true;
     }
 
-    void CheckConnectionGrid()
+    public void CheckConnectionGrid()
     {
         test_BaseGrid cell = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
+        connectionGridsRefs = new Vector3[test_PlacebleObjectSCO.connectionPoints.Length];
+
+        int emptyConnections = 0;
+
         for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
         {
             Vector3 Index = gridIndex + test_PlacebleObjectSCO.connectionPoints[i].connectionPointsPosition[0] +
                 GetRotationSideIndex(test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0], cell.isSquareGrid);
 
-            Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
+            connectionGridsRefs[i] = Index;
+            //Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
 
             test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);
             if (gridObj != null)
@@ -100,20 +108,71 @@ public class test_PlacebleObject : MonoBehaviour
                 if (placebleObjTransform != null)
                 {
                     test_PlacebleObject placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
-                    if (placebleObj.IsBuildingActive())
+
+                    for (int j = 0; j < placebleObj.GetConnectionGridRefs().Length; j++)
                     {
-                        isConnectionActive = true;
+                        if (placebleObj.GetConnectionGridRefs()[j] == gridIndex)
+                        {
+                            if (placebleObj.IsBuildingActive())
+                            {
+                                isConnectionActive = true;
+                            }
+                        }
                     }
+                }
+                else if (placebleObjTransform == null)
+                {
+                    emptyConnections++;
+                    if (emptyConnections == test_PlacebleObjectSCO.connectionPoints.Length)
+                    {
+                        isConnectionActive = false;
+                    }
+                }
+            }
+            else
+            {
+                emptyConnections++;
+                if (emptyConnections == test_PlacebleObjectSCO.connectionPoints.Length)
+                {
+                    isConnectionActive = false;
                 }
             }
         }
     }
 
+    void TriggerConnectionPointObjectsCheckSystem()
+    {
+        test_BaseGrid cell = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
+        connectionGridsRefs = new Vector3[test_PlacebleObjectSCO.connectionPoints.Length];
+        for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
+        {
+            Vector3 Index = gridIndex + test_PlacebleObjectSCO.connectionPoints[i].connectionPointsPosition[0] +
+                GetRotationSideIndex(test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0], cell.isSquareGrid);
+
+            connectionGridsRefs[i] = Index;
+
+            test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);
+            if (gridObj != null)
+            {
+                Transform placebleObjTransform = gridObj.GetPlacedObjet();
+                if (placebleObjTransform != null)
+                {
+                    test_PlacebleObject placedObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
+                    placedObj.CheckConnectionGrid();
+                }
+            }
+        }
+
+
+        Debug.LogError("Çalýþtý");
+    }
+
     public void DestroySelf()
     {
-        test_BaseGrid test_BaseGrid = grid.GetGridObject((int)worldPos.x, (int)worldPos.y, (int)worldPos.z);
+        test_BaseGrid test_BaseGrid = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
         ProduceBack();
         Destroy(test_BaseGrid.ClearPlacedObjcet());
+        TriggerConnectionPointObjectsCheckSystem();
     }
 
     public Vector3 GetRotationSideIndex(int connectPointDirection, bool isSquareGrid = false)
@@ -123,7 +182,7 @@ public class test_PlacebleObject : MonoBehaviour
         {
             connectPointDir -= 360;
         }
-        Debug.LogError("Baðlantý noktasýnýn baktýðý rotasyon" + connectPointDir);
+        //Debug.LogError("Baðlantý noktasýnýn baktýðý rotasyon" + connectPointDir);
         if (isSquareGrid)
         {
             switch (connectPointDir)
