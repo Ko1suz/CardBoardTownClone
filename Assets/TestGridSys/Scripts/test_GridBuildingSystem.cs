@@ -54,7 +54,6 @@ public class test_GridBuildingSystem : MonoBehaviour
         test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
         if (selectedX != x || selectedY != y || selectedZ != z)
         {
-            Debug.LogError("Test Event");
             OnSelectingGridChange?.Invoke(this, EventArgs.Empty);
             selectedX = x;  
             selectedY = y;
@@ -65,7 +64,6 @@ public class test_GridBuildingSystem : MonoBehaviour
     {
         if (eventFire)
         {
-            Debug.LogError("Test Event");
             OnSelectingGridChange?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -135,7 +133,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x, y, z));
+
             if (x >= 0 && canIPlace && buildMode)
             {
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
@@ -146,7 +144,19 @@ public class test_GridBuildingSystem : MonoBehaviour
                     int zIndex = test_BaseGrid.GetZIndex();
                     //GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
                     test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), new Vector3(xIndex,yIndex,zIndex), directionValue, test_PlacebleObjectSOs[index], test_GridXYZ);
-                    test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
+
+                    for (int ySize = 0; ySize < test_PlacebleObjectSOs[index].y_size; ySize++)
+                    {
+                        for (int zSize = 0; zSize < test_PlacebleObjectSOs[index].z_size; zSize++)
+                        {
+                            for (int xSize = 0; xSize < test_PlacebleObjectSOs[index].x_size; xSize++)
+                            {
+                                test_BaseGrid = test_GridXYZ.GetGridObject(x + (xSize), y + (ySize), z + (zSize));
+                                test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
+                                Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x + (xSize), y + (ySize), z + (zSize)));
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -169,7 +179,6 @@ public class test_GridBuildingSystem : MonoBehaviour
         {
             test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
         }
-        Debug.Log("Grid Index = " + x + " " + y + " " + z);
 
         return test_BaseGrid;
     }
@@ -270,7 +279,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                 isPlaceble++;
             }
         }
-        Debug.LogWarning("Boþ alan = " + isPlaceble);
+        //Debug.LogWarning("Boþ alan = " + isPlaceble);
         if (isPlaceble >=4){ return true; }
         else { return false; }
     }

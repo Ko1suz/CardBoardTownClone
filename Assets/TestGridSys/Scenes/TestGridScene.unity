@@ -296,6 +296,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: df4573b74017cb647acb7e171d48ff39, type: 2}
   - {fileID: 11400000, guid: 22f7d2207031d4244b4d57a8013c5c13, type: 2}
   - {fileID: 11400000, guid: cd40b34a58bc94f49a02cfaee2cd8db4, type: 2}
+  - {fileID: 11400000, guid: d7926ce89e9a8014bb4bb3b32f504097, type: 2}
   index: 0
   directionindex: 0
   directionValue: 0
@@ -671,7 +672,7 @@ MonoBehaviour:
   minXRotation: 10
   maxXRotation: 60
   moveSpeed: 10
-  edgeDistance: -5
+  edgeDistance: -5000
   centerPoint: {x: 20, y: 0, z: 15}
   maxDistance: 25
 --- !u!1 &1357249616

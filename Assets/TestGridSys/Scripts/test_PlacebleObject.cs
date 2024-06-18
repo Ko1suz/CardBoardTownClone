@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class test_PlacebleObject : MonoBehaviour
     test_PlacebleObjectSCO test_PlacebleObjectSCO;
     Vector3 worldPos;
     Vector3 gridIndex;
+    public Vector3 GetGridIndex { get => gridIndex;}
     Vector3[] gridIndex_s;
     int dir;
     
@@ -20,7 +22,7 @@ public class test_PlacebleObject : MonoBehaviour
 
     test_GridXYZ grid;
 
-    private void Awake()
+    private void Start()
     {
         if (thisIsBase) { isConnectionActive = true; }
     }
@@ -35,9 +37,9 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.dir = direction;
         test_PlacebleObject.grid = grid;
         test_PlacebleObject.isSquare = test_PlacebleObjectSCO.isSquare;
+        test_PlacebleObject.thisIsBase = test_PlacebleObjectSCO.thisIsBase;
         test_PlacebleObject.gridIndex = gridIndex;
         test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
-        test_PlacebleObject.thisIsBase = thisIsBase;
         test_PlacebleObject.CheckConnectionGrid();
 
         return test_PlacebleObject;
@@ -45,6 +47,7 @@ public class test_PlacebleObject : MonoBehaviour
 
     float timer = 0;
     bool workOnce = false;
+
     private void Update()
     {
        Produce(IsBuildingActive());
@@ -108,6 +111,12 @@ public class test_PlacebleObject : MonoBehaviour
                 if (placebleObjTransform != null)
                 {
                     test_PlacebleObject placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
+                    // Asýl giridi Kontrol et
+                    gridObj = grid.GetGridObject((int)placebleObj.GetGridIndex.x, (int)placebleObj.GetGridIndex.y, (int)placebleObj.GetGridIndex.z);
+                    placebleObjTransform = gridObj.GetPlacedObjet();
+                    placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
+
+                    Debug.Log(placebleObj.GetConnectionGridRefs().Length);
 
                     for (int j = 0; j < placebleObj.GetConnectionGridRefs().Length; j++)
                     {
@@ -138,6 +147,10 @@ public class test_PlacebleObject : MonoBehaviour
                 }
             }
         }
+        if (thisIsBase)
+        {
+            isConnectionActive = true;
+        }
     }
 
     void TriggerConnectionPointObjectsCheckSystem()
@@ -162,16 +175,25 @@ public class test_PlacebleObject : MonoBehaviour
                 }
             }
         }
-
-
-        Debug.LogError("Çalýþtý");
     }
 
     public void DestroySelf()
     {
         test_BaseGrid test_BaseGrid = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
         ProduceBack();
-        Destroy(test_BaseGrid.ClearPlacedObjcet());
+        //Destroy(test_BaseGrid.ClearPlacedObjcet());
+        for (int ySize = 0; ySize < test_PlacebleObjectSCO.y_size; ySize++)
+        {
+            for (int zSize = 0; zSize < test_PlacebleObjectSCO.z_size; zSize++)
+            {
+                for (int xSize = 0; xSize < test_PlacebleObjectSCO.x_size; xSize++)
+                {
+                    test_BaseGrid = grid.GetGridObject((int)gridIndex.x + (xSize), (int)gridIndex.y + (ySize), (int)gridIndex.z + (zSize));
+                    Destroy(test_BaseGrid.ClearPlacedObjcet());
+                }
+            }
+        }
+
         TriggerConnectionPointObjectsCheckSystem();
     }
 

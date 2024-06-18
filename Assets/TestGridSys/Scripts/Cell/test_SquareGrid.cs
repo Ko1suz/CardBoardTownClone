@@ -53,7 +53,7 @@ public class test_SquareGrid : test_BaseGrid
     {
         if (showDebug)
         {
-            Debug.Log("DebugDrawLines Çalýþýtý");
+
             SetInitiatorPointAmount();
             _shapePoints = new Vector3[_shapePointAmount + 1];
             _rotateVector = Quaternion.AngleAxis(_initialRotation, _rotateAxis) * _rotateVector;

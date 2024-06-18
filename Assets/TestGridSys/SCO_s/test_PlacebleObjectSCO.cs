@@ -13,6 +13,7 @@ public class test_PlacebleObjectSCO : ScriptableObject
     public int z_size;
 
     public bool isSquare = false;
+    public bool thisIsBase = false;
     public Vector3 minPlaceIndexs;
     public Vector3 maxPlaceIndexs = new Vector3(99,99,99);
 
