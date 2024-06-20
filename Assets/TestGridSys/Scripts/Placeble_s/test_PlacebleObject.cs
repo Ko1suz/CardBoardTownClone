@@ -18,9 +18,12 @@ public class test_PlacebleObject : MonoBehaviour
     [SerializeField] bool isConnectionActive = false;
 
     Vector3[] connectionGridsRefs;
+    ConnectionPoint[] connections;
     [HideInInspector] public Vector3[] GetConnectionGridRefs() { return connectionGridsRefs; }
 
     test_GridXYZ grid;
+
+    int energyLevel = 0;
 
     private void Start()
     {
@@ -41,7 +44,7 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.gridIndex = gridIndex;
         test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
         test_PlacebleObject.CheckConnectionGrid();
-
+        test_PlacebleObject.connections = new ConnectionPoint[test_PlacebleObjectSCO.connectionPoints.Length];
         return test_PlacebleObject;
     }
 
@@ -104,6 +107,7 @@ public class test_PlacebleObject : MonoBehaviour
             connectionGridsRefs[i] = Index;
             //Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
 
+            // Baðlantý noktalarýnýn olduðu yönde ki Indexler hesaplanýr
             test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);
             if (gridObj != null)
             {
@@ -111,7 +115,7 @@ public class test_PlacebleObject : MonoBehaviour
                 if (placebleObjTransform != null)
                 {
                     test_PlacebleObject placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
-                    // Asýl giridi Kontrol et
+                    // Bina çok katlý vb ise asýl grid indexini referans alarak tekrar hesaplar
                     gridObj = grid.GetGridObject((int)placebleObj.GetGridIndex.x, (int)placebleObj.GetGridIndex.y, (int)placebleObj.GetGridIndex.z);
                     placebleObjTransform = gridObj.GetPlacedObjet();
                     placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
@@ -120,10 +124,14 @@ public class test_PlacebleObject : MonoBehaviour
 
                     for (int j = 0; j < placebleObj.GetConnectionGridRefs().Length; j++)
                     {
+                        // objenin baðlantý noktalarýndan birisi bu objeye bakýyor ise
                         if (placebleObj.GetConnectionGridRefs()[j] == gridIndex)
                         {
+                            connections[i].connectionPointObj = placebleObj;
+                            // ve o obje aktif ise 
                             if (placebleObj.IsBuildingActive())
                             {
+                                // baðlantýyý aktif hale getir
                                 isConnectionActive = true;
                             }
                         }
@@ -153,25 +161,19 @@ public class test_PlacebleObject : MonoBehaviour
         }
     }
 
-    void TriggerConnectionPointObjectsCheckSystem()
+    public void TriggerConnectionPointObjectsCheckSystem()
     {
-        test_BaseGrid cell = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
-        connectionGridsRefs = new Vector3[test_PlacebleObjectSCO.connectionPoints.Length];
         for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
         {
-            Vector3 Index = gridIndex + test_PlacebleObjectSCO.connectionPoints[i].connectionPointsPosition[0] +
-                GetRotationSideIndex(test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0], cell.isSquareGrid);
-
-            connectionGridsRefs[i] = Index;
-
-            test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);
+            test_BaseGrid gridObj = grid.GetGridObject((int)connectionGridsRefs[i].x, (int)connectionGridsRefs[i].y, (int)connectionGridsRefs[i].z);
             if (gridObj != null)
             {
                 Transform placebleObjTransform = gridObj.GetPlacedObjet();
                 if (placebleObjTransform != null)
                 {
                     test_PlacebleObject placedObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
-                    placedObj.CheckConnectionGrid();
+                    if (isConnectionActive && !thisIsBase) { placedObj.CheckConnectionGrid(); placedObj.TriggerConnectionPointObjectsCheckSystem(); }
+
                 }
             }
         }
@@ -244,7 +246,31 @@ public class test_PlacebleObject : MonoBehaviour
                 default:
                     return new Vector3(0, 0, 0);
             }
-        }
-       
+        }  
     }
+
+    public void CheckConnectionsAndGetEnergy()
+    {
+
+    }
+
+    public void CheckConnectionsAndGiveEnergy()
+    {
+
+    }
+
+    public void SetEnergy(int value)
+    {
+        if (!thisIsBase)
+        {
+            energyLevel += value;
+        }
+    }
+}
+
+public struct ConnectionPoint
+{
+    public test_PlacebleObject connectionPointObj;
+    public int receivedEnergy;
+    public int givenEnergy;
 }
