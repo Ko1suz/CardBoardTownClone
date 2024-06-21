@@ -1,6 +1,7 @@
 #if UNITY_EDITOR
 using CodeMonkey.Utils;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -46,6 +47,7 @@ public class test_GridBuildingSystem : MonoBehaviour
     private int selectedZ = 0;
     private bool canIplace = false;
 
+    public List<test_PlacebleObject> test_PlacebleObjects;
 
     public event EventHandler OnSelectingGridChange;
 
@@ -115,7 +117,9 @@ public class test_GridBuildingSystem : MonoBehaviour
             if(!test_BaseGrid.CanBuild())
             {
                 //Destroy(test_BaseGrid.ClearPlacedObjcet());
-                test_BaseGrid.GetPlacedObjet().GetComponent<test_PlacebleObject>().DestroySelf();
+                test_PlacebleObject objRef = test_BaseGrid.GetPlacedObjet().GetComponent<test_PlacebleObject>();
+                test_PlacebleObjects.Remove(objRef);
+                objRef.DestroySelf();
             }
             else
             {
@@ -137,7 +141,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             if (x >= 0 && canIPlace && buildMode)
             {
                 test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
-                if (CheclAllConditions(x,y,z, true))
+                if (CheckAllConditions(x,y,z, true))
                 {
                     int xIndex = test_BaseGrid.GetXIndex();
                     int yIndex = test_BaseGrid.GetYIndex();
@@ -154,6 +158,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                                 test_BaseGrid = test_GridXYZ.GetGridObject(x + (xSize), y + (ySize), z + (zSize));
                                 test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
                                 Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x + (xSize), y + (ySize), z + (zSize)));
+                                test_PlacebleObjects.Add(cloneBuilding);
                             }
                         }
                     }
@@ -184,7 +189,7 @@ public class test_GridBuildingSystem : MonoBehaviour
     }
 
 
-    bool CheclAllConditions(int xIndex, int yIndex, int zIndex, bool setResources = false)
+    bool CheckAllConditions(int xIndex, int yIndex, int zIndex, bool setResources = false)
     {
         if (CheckGridAndBuildingType(xIndex, yIndex, zIndex) &&
         CheckBuildingBorders(yIndex) &&
@@ -358,7 +363,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         {
             canIplace = false;
         }
-        else if (!CheclAllConditions(gridRef.GetXIndex(), gridRef.GetYIndex(), gridRef.GetZIndex()))
+        else if (!CheckAllConditions(gridRef.GetXIndex(), gridRef.GetYIndex(), gridRef.GetZIndex()))
         {
             canIplace = false;
         }

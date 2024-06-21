@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
 
     static GameManager instance;
     public static GameManager GetGameManagerInstance { get => instance; }
+    
+    [SerializeField] test_GridBuildingSystem GridBuildingSystemRef;
+    public test_GridBuildingSystem GetGridBuildingSystem { get => GridBuildingSystemRef; }
 
 
     private void Awake()
@@ -30,6 +33,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    private void Start()
+    {
+        GridBuildingSystemRef = FindObjectOfType<test_GridBuildingSystem>();
     }
 
 

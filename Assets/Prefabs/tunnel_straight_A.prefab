@@ -119,3 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSquare: 0
+  thisIsBase: 0
+  isConnectionActive: 0
+  DisconnectedSprite: {fileID: 21300000, guid: 9db77505189b61f419431bcd2edf91a3, type: 3}

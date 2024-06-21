@@ -230,6 +230,7 @@ MonoBehaviour:
   isSquare: 0
   thisIsBase: 1
   isConnectionActive: 1
+  DisconnectedSprite: {fileID: 21300000, guid: 9db77505189b61f419431bcd2edf91a3, type: 3}
 --- !u!1 &3583824451690422774
 GameObject:
   m_ObjectHideFlags: 0

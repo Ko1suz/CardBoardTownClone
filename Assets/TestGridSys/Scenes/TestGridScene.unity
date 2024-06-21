@@ -300,6 +300,7 @@ MonoBehaviour:
   index: 0
   directionindex: 0
   directionValue: 0
+  test_PlacebleObjects: []
 --- !u!1 &208060189
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,6 +806,7 @@ MonoBehaviour:
   researchPoint: 0
   settlersMorale: 0
   habitability: 0
+  GridBuildingSystemRef: {fileID: 0}
 --- !u!1 &1632483664
 GameObject:
   m_ObjectHideFlags: 0

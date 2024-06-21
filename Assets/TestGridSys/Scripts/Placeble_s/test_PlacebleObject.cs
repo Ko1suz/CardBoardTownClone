@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class test_PlacebleObject : MonoBehaviour
@@ -9,6 +11,7 @@ public class test_PlacebleObject : MonoBehaviour
     Vector3 worldPos;
     Vector3 gridIndex;
     public Vector3 GetGridIndex { get => gridIndex;}
+    
     Vector3[] gridIndex_s;
     int dir;
     
@@ -18,16 +21,32 @@ public class test_PlacebleObject : MonoBehaviour
     [SerializeField] bool isConnectionActive = false;
 
     Vector3[] connectionGridsRefs;
-    ConnectionPoint[] connections;
+    test_PlacebleObject[] connections;
     [HideInInspector] public Vector3[] GetConnectionGridRefs() { return connectionGridsRefs; }
+    public bool IsThisBase { get => thisIsBase;}
 
     test_GridXYZ grid;
 
-    int energyLevel = 0;
+
+    public Sprite DisconnectedSprite;
+    GameObject DisconnectedSpriteRef;
 
     private void Start()
     {
         if (thisIsBase) { isConnectionActive = true; }
+        CreateDisconnectedSprite();
+    }
+
+    public void CreateDisconnectedSprite()
+    {
+        DisconnectedSpriteRef = new GameObject();
+        SpriteRenderer objRenderer = DisconnectedSpriteRef.AddComponent<SpriteRenderer>();
+        objRenderer.sprite = DisconnectedSprite;
+        objRenderer.color = Color.red;
+        objRenderer.sortingLayerName = "UILayer";
+        DisconnectedSpriteRef.transform.parent = this.gameObject.transform;
+        DisconnectedSpriteRef.transform.localPosition = Vector3.zero + new Vector3(0,test_PlacebleObjectSCO.y_size + 0.5f, 0);   
+        DisconnectedSpriteRef.SetActive(false);
     }
 
     public static test_PlacebleObject Create(Vector3 worldPos, Vector3 gridIndex, int direction, test_PlacebleObjectSCO test_PlacebleObjectSCO, test_GridXYZ grid, bool thisIsBase = false)
@@ -43,8 +62,9 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.thisIsBase = test_PlacebleObjectSCO.thisIsBase;
         test_PlacebleObject.gridIndex = gridIndex;
         test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
+        test_PlacebleObject.connections = new test_PlacebleObject[test_PlacebleObjectSCO.connectionPoints.Length];
         test_PlacebleObject.CheckConnectionGrid();
-        test_PlacebleObject.connections = new ConnectionPoint[test_PlacebleObjectSCO.connectionPoints.Length];
+
         return test_PlacebleObject;
     }
 
@@ -60,10 +80,13 @@ public class test_PlacebleObject : MonoBehaviour
     {
         if (isConnectionActive)
         {
+            DisconnectedSpriteRef.SetActive(false);
             return true;
         }
         else
         {
+            DisconnectedSpriteRef.SetActive(true);
+            DisconnectedSpriteRef.transform.LookAt(Camera.main.transform);
             return false;
         }
     }
@@ -97,7 +120,6 @@ public class test_PlacebleObject : MonoBehaviour
         test_BaseGrid cell = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
         connectionGridsRefs = new Vector3[test_PlacebleObjectSCO.connectionPoints.Length];
 
-        int emptyConnections = 0;
 
         for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
         {
@@ -120,14 +142,13 @@ public class test_PlacebleObject : MonoBehaviour
                     placebleObjTransform = gridObj.GetPlacedObjet();
                     placebleObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
 
-                    Debug.Log(placebleObj.GetConnectionGridRefs().Length);
-
                     for (int j = 0; j < placebleObj.GetConnectionGridRefs().Length; j++)
                     {
                         // objenin baðlantý noktalarýndan birisi bu objeye bakýyor ise
                         if (placebleObj.GetConnectionGridRefs()[j] == gridIndex)
                         {
-                            connections[i].connectionPointObj = placebleObj;
+                            placebleObj.connections[j] = this;
+                            connections[i] = placebleObj;
                             // ve o obje aktif ise 
                             if (placebleObj.IsBuildingActive())
                             {
@@ -139,49 +160,39 @@ public class test_PlacebleObject : MonoBehaviour
                 }
                 else if (placebleObjTransform == null)
                 {
-                    emptyConnections++;
-                    if (emptyConnections == test_PlacebleObjectSCO.connectionPoints.Length)
-                    {
-                        isConnectionActive = false;
-                    }
+                    isConnectionActive = false;
                 }
             }
             else
             {
-                emptyConnections++;
-                if (emptyConnections == test_PlacebleObjectSCO.connectionPoints.Length)
-                {
-                    isConnectionActive = false;
-                }
+                isConnectionActive = false;
             }
         }
         if (thisIsBase)
         {
             isConnectionActive = true;
         }
+        if (isConnectionActive)
+        {
+            ActivateConnections();
+        }
     }
 
-    public void TriggerConnectionPointObjectsCheckSystem()
+    public void ActivateConnections()
     {
-        for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
+        for (int i = 0; i < connections.Length; i++)
         {
-            test_BaseGrid gridObj = grid.GetGridObject((int)connectionGridsRefs[i].x, (int)connectionGridsRefs[i].y, (int)connectionGridsRefs[i].z);
-            if (gridObj != null)
+            if (connections[i] != null && !connections[i].isConnectionActive)
             {
-                Transform placebleObjTransform = gridObj.GetPlacedObjet();
-                if (placebleObjTransform != null)
-                {
-                    test_PlacebleObject placedObj = placebleObjTransform.GetComponent<test_PlacebleObject>();
-                    if (isConnectionActive && !thisIsBase) { placedObj.CheckConnectionGrid(); placedObj.TriggerConnectionPointObjectsCheckSystem(); }
-
-                }
+                connections[i].isConnectionActive = true;
+                connections[i].ActivateConnections();
             }
         }
     }
 
     public void DestroySelf()
     {
-        test_BaseGrid test_BaseGrid = grid.GetGridObject((int)gridIndex.x, (int)gridIndex.y, (int)gridIndex.z);
+        test_BaseGrid test_BaseGrid;
         ProduceBack();
         //Destroy(test_BaseGrid.ClearPlacedObjcet());
         for (int ySize = 0; ySize < test_PlacebleObjectSCO.y_size; ySize++)
@@ -195,8 +206,37 @@ public class test_PlacebleObject : MonoBehaviour
                 }
             }
         }
+        DisableAllBuildings();
+        FindBaseAndActivateBuildings();
+    }
 
-        TriggerConnectionPointObjectsCheckSystem();
+    public void DisableAllBuildings()
+    {
+        foreach (var building in GameManager.GetGameManagerInstance.GetGridBuildingSystem.test_PlacebleObjects)
+        {
+            if (!building.IsThisBase)
+            {
+                building.isConnectionActive = false;
+            }
+        }
+    }
+
+
+    public void FindBaseAndActivateBuildings()
+    {
+        test_PlacebleObject baseBuilding = null;
+        foreach (var building in GameManager.GetGameManagerInstance.GetGridBuildingSystem.test_PlacebleObjects)
+        {
+            if (building.IsThisBase)
+            {
+                baseBuilding = building;
+            }
+        }
+
+        if (baseBuilding != null)
+        {
+            baseBuilding.ActivateConnections();
+        }
     }
 
     public Vector3 GetRotationSideIndex(int connectPointDirection, bool isSquareGrid = false)
@@ -248,29 +288,4 @@ public class test_PlacebleObject : MonoBehaviour
             }
         }  
     }
-
-    public void CheckConnectionsAndGetEnergy()
-    {
-
-    }
-
-    public void CheckConnectionsAndGiveEnergy()
-    {
-
-    }
-
-    public void SetEnergy(int value)
-    {
-        if (!thisIsBase)
-        {
-            energyLevel += value;
-        }
-    }
-}
-
-public struct ConnectionPoint
-{
-    public test_PlacebleObject connectionPointObj;
-    public int receivedEnergy;
-    public int givenEnergy;
 }
