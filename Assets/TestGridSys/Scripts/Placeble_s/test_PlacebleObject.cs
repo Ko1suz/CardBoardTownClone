@@ -37,18 +37,6 @@ public class test_PlacebleObject : MonoBehaviour
         CreateDisconnectedSprite();
     }
 
-    public void CreateDisconnectedSprite()
-    {
-        DisconnectedSpriteRef = new GameObject();
-        SpriteRenderer objRenderer = DisconnectedSpriteRef.AddComponent<SpriteRenderer>();
-        objRenderer.sprite = DisconnectedSprite;
-        objRenderer.color = Color.red;
-        objRenderer.sortingLayerName = "UILayer";
-        DisconnectedSpriteRef.transform.parent = this.gameObject.transform;
-        DisconnectedSpriteRef.transform.localPosition = Vector3.zero + new Vector3(0,test_PlacebleObjectSCO.y_size + 0.5f, 0);   
-        DisconnectedSpriteRef.SetActive(false);
-    }
-
     public static test_PlacebleObject Create(Vector3 worldPos, Vector3 gridIndex, int direction, test_PlacebleObjectSCO test_PlacebleObjectSCO, test_GridXYZ grid, bool thisIsBase = false)
     {
         Transform placedObjectTransform = Instantiate(test_PlacebleObjectSCO.prefab, worldPos, Quaternion.Euler(0,direction,0));
@@ -74,19 +62,18 @@ public class test_PlacebleObject : MonoBehaviour
     private void Update()
     {
        Produce(IsBuildingActive());
+       DisconnectedSpriteRef.SetActive(!IsBuildingActive());
+       if (DisconnectedSpriteRef.activeSelf) { DisconnectedSpriteRef.transform.LookAt(Camera.main.transform); }
     }
 
     public bool IsBuildingActive()
     {
         if (isConnectionActive)
-        {
-            DisconnectedSpriteRef.SetActive(false);
+        {  
             return true;
         }
         else
         {
-            DisconnectedSpriteRef.SetActive(true);
-            DisconnectedSpriteRef.transform.LookAt(Camera.main.transform);
             return false;
         }
     }
@@ -158,24 +145,14 @@ public class test_PlacebleObject : MonoBehaviour
                         }
                     }
                 }
-                else if (placebleObjTransform == null)
-                {
-                    isConnectionActive = false;
-                }
-            }
-            else
-            {
-                isConnectionActive = false;
             }
         }
         if (thisIsBase)
         {
             isConnectionActive = true;
         }
-        if (isConnectionActive)
-        {
-            ActivateConnections();
-        }
+
+        if (isConnectionActive) { ActivateConnections(); }
     }
 
     public void ActivateConnections()
@@ -288,4 +265,18 @@ public class test_PlacebleObject : MonoBehaviour
             }
         }  
     }
+
+
+    public void CreateDisconnectedSprite()
+    {
+        DisconnectedSpriteRef = new GameObject();
+        SpriteRenderer objRenderer = DisconnectedSpriteRef.AddComponent<SpriteRenderer>();
+        objRenderer.sprite = DisconnectedSprite;
+        objRenderer.color = Color.red;
+        objRenderer.sortingLayerName = "UILayer";
+        DisconnectedSpriteRef.transform.parent = this.gameObject.transform;
+        DisconnectedSpriteRef.transform.localPosition = Vector3.zero + new Vector3(0, test_PlacebleObjectSCO.y_size + 0.5f, 0);
+        DisconnectedSpriteRef.SetActive(false);
+    }
+
 }

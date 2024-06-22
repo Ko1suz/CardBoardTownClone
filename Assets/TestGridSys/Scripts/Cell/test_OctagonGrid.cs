@@ -2,6 +2,7 @@ using CodeMonkey.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class test_OctagonGrid : test_BaseGrid
 {
@@ -30,7 +31,7 @@ public class test_OctagonGrid : test_BaseGrid
         //DrawDebugLines(new Vector3(x,y,z));
     }
 
-    private void OnEnable()
+    public override void CreateLineRenderer(Vector3 worldPos, Material lineMat)
     {
         SetInitiatorPointAmount();
         _positions = new Vector3[_shapePointAmount + 1];
@@ -42,7 +43,24 @@ public class test_OctagonGrid : test_BaseGrid
             _rotateVector = Quaternion.AngleAxis(360 / _shapePointAmount, _rotateAxis) * _rotateVector;
         }
         _positions[_shapePointAmount] = _positions[0];
+
+
+        GameObject LineRendererObj = new GameObject();
+        LineRendererObj.transform.position = worldPos;
+        LineRenderer _lineRenderer = LineRendererObj.AddComponent<LineRenderer>();
+
+        _lineRenderer.startWidth = 0.1f;
+        _lineRenderer.endWidth = 0.1f;
+        _lineRenderer.useWorldSpace = false;
+        _lineRenderer.positionCount = _positions.Length;
+        _lineRenderer.SetPositions(_positions);
+        _lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        //_lineRenderer.numCapVertices = 90;
+        _lineRenderer.loop = true;
+
+        _lineRenderer.material = lineMat;
     }
+
     public override Vector3 GetWorldPosition()
     {
         return new Vector3(x, y, z * 2) * baseGridSize + originPosition;

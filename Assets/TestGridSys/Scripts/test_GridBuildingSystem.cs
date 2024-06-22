@@ -336,9 +336,9 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 if (canIplace)
                 {
-                    float green = 191;
+                    float green = 59;
                     float red = 0;
-                    float blue = 190;
+                    float blue = 65;
                     Color blueEmmisonColor = new Color(red / 255f, green / 255f, blue / 255f);
                     Renderer renderer = visualClone.GetComponent<Renderer>();
                     Material material = renderer.material;

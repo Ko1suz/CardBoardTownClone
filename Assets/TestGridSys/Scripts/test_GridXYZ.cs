@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using ColorUtility = UnityEngine.ColorUtility;
 
 public class test_GridXYZ
 {
@@ -31,6 +33,23 @@ public class test_GridXYZ
         this.originPosition = originPosition;
         gridObjcets = new test_BaseGrid[grid_x_lenght, grid_y_lenght, grid_z_lenght];
 
+        Material sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+        sharedMaterial.SetFloat("_Surface", 1); // 1: Transparent, 0: Opaque
+        sharedMaterial.SetFloat("_Blend", 2); // 0: Alpha, 1: Premultiply, 2: Additive, 3: Multiply
+        sharedMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Front + 1); // Front: 2, Back: 1, Both: 0
+      
+
+
+        float green = 62;
+        float red = 142;
+        float blue = 54;
+        float alpha = 100;
+        Color color = new Color(red / 255f, green / 255f, blue / 255f, alpha /255f);
+        Debug.LogError(color);
+        sharedMaterial.SetColor("_BaseColor", Color.red);
+        sharedMaterial.enableInstancing = true;
+
+
         for (int y = 0; y < gridObjcets.GetLength(1); y++)
         {
             for (int z = 0; z < gridObjcets.GetLength(2); z++)
@@ -40,12 +59,14 @@ public class test_GridXYZ
                     if (x <=0 || x % 2 == 0)
                     {
                         gridObjcets[x, y, z] = new test_OctagonGrid(x, y, z, baseGridSize, y <= 0);
-                        gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionOctagonGrid(x, y, z));
+                        //gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionOctagonGrid(x, y, z));
+                        if (y <= 0) { gridObjcets[x, y, z].CreateLineRenderer(GetWorldPositionOctagonGrid(x, y, z), sharedMaterial); }
                     }
                     else
                     {
                         gridObjcets[x, y, z] = new test_SquareGrid(x, y, z, baseGridSize, y <= 0);
-                        gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionSquareGrid(x, y, z));
+                        //gridObjcets[x, y, z].DrawDebugLines(GetWorldPositionSquareGrid(x, y, z));
+                        if (y <= 0) { gridObjcets[x, y, z].CreateLineRenderer(GetWorldPositionSquareGrid(x, y, z), sharedMaterial); }
                     }
                 }
             }

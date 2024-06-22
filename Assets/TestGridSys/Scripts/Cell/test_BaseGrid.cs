@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class test_BaseGrid 
 {
     protected int x, y, z;
     protected float baseGridSize = 1;
     protected Transform placedObject;
+    protected Transform lineRenderObj;
     protected bool showDebug;
     public bool isSquareGrid;
 
@@ -22,6 +24,10 @@ public class test_BaseGrid
     public virtual void DrawDebugLines(Vector3 worldPos)
     {
 
+    }
+    public virtual void CreateLineRenderer(Vector3 worldPos, Material lineMat)
+    {
+        
     }
 
     public virtual Vector3 GetWorldPosition()
