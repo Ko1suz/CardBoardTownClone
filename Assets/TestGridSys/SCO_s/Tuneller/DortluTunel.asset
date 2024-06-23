@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc03598e9e1ac34f80fe9de73bd2c36, type: 3}
+  m_Name: DortluTunel
+  m_EditorClassIdentifier: 
+  nameString: TestBuilding
+  uiImage: {fileID: 0}
+  prefab: {fileID: 4009564628146486617, guid: 0f3ad80c734594847a1efb547bc7cdc7, type: 3}
+  visual: {fileID: 4994509895245551248, guid: 95790f5b0f55b854fa95fab702521b95, type: 3}
+  x_size: 1
+  y_size: 1
+  z_size: 1
+  isSquare: 1
+  thisIsBase: 0
+  minPlaceIndexs: {x: 0, y: 0, z: 0}
+  maxPlaceIndexs: {x: 99, y: 99, z: 99}
+  lifeSupportMat: 0
+  structureMat: 0
+  energyMat: 0
+  conductiveMat: 0
+  connectionPoints:
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 00000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 5a000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: b4000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 0e010000
+  produced: 7
+  productionValue: 1
+  productionTime: 12

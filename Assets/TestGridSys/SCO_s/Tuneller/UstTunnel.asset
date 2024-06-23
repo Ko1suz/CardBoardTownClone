@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebc03598e9e1ac34f80fe9de73bd2c36, type: 3}
-  m_Name: Test_3
+  m_Name: UstTunnel
   m_EditorClassIdentifier: 
   nameString: TestBuilding
   uiImage: {fileID: 0}
-  prefab: {fileID: 5795648472395133581, guid: 683273f3cb692d74e930ca043ffb3cb6, type: 3}
-  visual: {fileID: 5795648472395133581, guid: 3822540d1a7986e4e994aa538ebab36d, type: 3}
+  prefab: {fileID: 130947835600115873, guid: 329fa7a62fc528848999d4fd54f25582, type: 3}
+  visual: {fileID: 7285856969110852768, guid: 463c83ddc2166d54f8d575fcf5f45647, type: 3}
   x_size: 1
-  y_size: 1
+  y_size: 2
   z_size: 1
   isSquare: 1
+  thisIsBase: 0
   minPlaceIndexs: {x: 0, y: 0, z: 0}
   maxPlaceIndexs: {x: 99, y: 99, z: 99}
   lifeSupportMat: 0
@@ -29,10 +30,10 @@ MonoBehaviour:
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}
-    connectionPointsRotation: 5a000000
+    connectionPointsRotation: 00000000
   - connectionPointsPosition:
-    - {x: 0, y: 0, z: 0}
-    connectionPointsRotation: 0e010000
+    - {x: 0, y: 1, z: 0}
+    connectionPointsRotation: 00000000
   produced: 7
   productionValue: 1
   productionTime: 12

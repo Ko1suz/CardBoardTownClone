@@ -1,13 +1,10 @@
 #if UNITY_EDITOR
-using CodeMonkey.Utils;
-using System;
-using System.Collections.Generic;
 using UnityEditor;
 #endif
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static CM_PlacedObjectTypeSO;
-
+using System.Collections.Generic;
+using System;
+using CodeMonkey.Utils;
 
 public class test_GridBuildingSystem : MonoBehaviour
 {
@@ -49,6 +46,8 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     public List<test_PlacebleObject> test_PlacebleObjects;
 
+    MaterialSetter materialSetter;
+
     public event EventHandler OnSelectingGridChange;
 
     void CheckSelectedGridChange()
@@ -74,6 +73,7 @@ public class test_GridBuildingSystem : MonoBehaviour
     {
         test_GridXYZ = new test_GridXYZ(x, y, z, gridCellSize, gridPosition);
         OnSelectingGridChange += CheckConditons;
+        materialSetter = GetComponent<MaterialSetter>();
     }
 
     private void Update()
@@ -106,6 +106,27 @@ public class test_GridBuildingSystem : MonoBehaviour
         if (Input.GetKey(KeyCode.Alpha4))
         {
             index = 3;
+            Destroy(visualClone);
+            visualClone = null;
+            CheckSelectedGridChange(true);
+        }
+        if (Input.GetKey(KeyCode.Alpha5))
+        {
+            index = 4;
+            Destroy(visualClone);
+            visualClone = null;
+            CheckSelectedGridChange(true);
+        }
+        if (Input.GetKey(KeyCode.Alpha6))
+        {
+            index = 5;
+            Destroy(visualClone);
+            visualClone = null;
+            CheckSelectedGridChange(true);
+        }
+        if (Input.GetKey(KeyCode.Alpha7))
+        {
+            index = 6;
             Destroy(visualClone);
             visualClone = null;
             CheckSelectedGridChange(true);
@@ -336,20 +357,12 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 if (canIplace)
                 {
-                    float green = 59;
-                    float red = 0;
-                    float blue = 65;
-                    Color blueEmmisonColor = new Color(red / 255f, green / 255f, blue / 255f);
-                    Renderer renderer = visualClone.GetComponent<Renderer>();
-                    Material material = renderer.material;
-                    material.SetColor("_EmissionColor", blueEmmisonColor * Mathf.LinearToGammaSpace(5.8f));
+                    materialSetter.SetObjMatBlue();
                     //SetBuilding(true);
                 }
                 else
                 {
-                    Renderer renderer = visualClone.GetComponent<Renderer>();
-                    Material material = renderer.material;
-                    material.SetColor("_EmissionColor", Color.red * Mathf.LinearToGammaSpace(5.8f));
+                    materialSetter.SetObjMatRed();
                     //SetBuilding(false);
                 }
             }
