@@ -29,7 +29,7 @@ public class test_GridBuildingSystem : MonoBehaviour
     public test_GridXYZ GetGridXYZ { get => test_GridXYZ; }
 
     public bool buildMode = false;
-    public test_PlacebleObjectSCO[] test_PlacebleObjectSOs;
+    public test_PlacebleObjectSCO selectedSco;
     GameObject visualClone;
     public int index = 0;
 
@@ -168,13 +168,13 @@ public class test_GridBuildingSystem : MonoBehaviour
                     int yIndex = test_BaseGrid.GetYIndex();
                     int zIndex = test_BaseGrid.GetZIndex();
                     //GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
-                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), new Vector3(xIndex,yIndex,zIndex), directionValue, test_PlacebleObjectSOs[index], test_GridXYZ);
+                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), new Vector3(xIndex,yIndex,zIndex), directionValue, selectedSco, test_GridXYZ);
 
-                    for (int ySize = 0; ySize < test_PlacebleObjectSOs[index].y_size; ySize++)
+                    for (int ySize = 0; ySize < selectedSco.y_size; ySize++)
                     {
-                        for (int zSize = 0; zSize < test_PlacebleObjectSOs[index].z_size; zSize++)
+                        for (int zSize = 0; zSize < selectedSco.z_size; zSize++)
                         {
-                            for (int xSize = 0; xSize < test_PlacebleObjectSOs[index].x_size; xSize++)
+                            for (int xSize = 0; xSize < selectedSco.x_size; xSize++)
                             {
                                 test_BaseGrid = test_GridXYZ.GetGridObject(x + (xSize), y + (ySize), z + (zSize));
                                 test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
@@ -216,7 +216,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         CheckBuildingBorders(yIndex) &&
         CheckGridItSelf(xIndex, yIndex, zIndex) &&
         CheckSideGrids(xIndex, yIndex, zIndex) &&
-        GameManager.GetGameManagerInstance.CheckBuildingCost(test_PlacebleObjectSOs[index], setResources))
+        GameManager.GetGameManagerInstance.CheckBuildingCost(selectedSco, setResources))
         {
             return true;
         }
@@ -228,7 +228,7 @@ public class test_GridBuildingSystem : MonoBehaviour
     {
         test_BaseGrid gridRef;
         gridRef = test_GridXYZ.GetGridObject(xIndex, yIndex, zIndex);
-        if (gridRef.isSquareGrid && !test_PlacebleObjectSOs[index].isSquare)
+        if (gridRef.isSquareGrid && !selectedSco.isSquare)
         {
             return false;
         }
@@ -240,7 +240,7 @@ public class test_GridBuildingSystem : MonoBehaviour
     // Bina Index Yuksekliðini Kontrol ediyor
     bool CheckBuildingBorders(int yIndex)
     {
-        if (yIndex >= test_PlacebleObjectSOs[index].minPlaceIndexs.y &&  yIndex <= test_PlacebleObjectSOs[index].maxPlaceIndexs.y)
+        if (yIndex >= selectedSco.minPlaceIndexs.y &&  yIndex <= selectedSco.maxPlaceIndexs.y)
         {
             return true;
         }
@@ -279,7 +279,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
-            else if (gridRef.CheckPlacedObject() || test_PlacebleObjectSOs[index].isSquare)
+            else if (gridRef.CheckPlacedObject() || selectedSco.isSquare)
             {
                 isPlaceble++;
             }
@@ -296,7 +296,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
-            else if (gridRef.CheckPlacedObject() || test_PlacebleObjectSOs[index].isSquare)
+            else if (gridRef.CheckPlacedObject() || selectedSco.isSquare)
             {
                 isPlaceble++;
             }
@@ -340,7 +340,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                 last_GridRefPos = gridRef.GetWorldPosition();
                 if (visualClone == null)
                 {
-                    visualClone = Instantiate(test_PlacebleObjectSOs[index].visual.gameObject, CM_Testing.GetMousePos3D(), Quaternion.Euler(0, directions[directionindex], 0));
+                    visualClone = Instantiate(selectedSco.visual.gameObject, CM_Testing.GetMousePos3D(), Quaternion.Euler(0, directions[directionindex], 0));
                 }
                 visualClone.transform.position = Vector3.Lerp(visualClone.transform.position, gridRef.GetWorldPosition(), Time.deltaTime * 10);
                 visualClone.transform.rotation = Quaternion.Lerp(visualClone.transform.rotation, Quaternion.Euler(0, directions[directionindex], 0), Time.deltaTime * 5);

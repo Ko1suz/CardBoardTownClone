@@ -1,11 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu()]
 public class test_PlacebleObjectSCO : ScriptableObject
 {
     public string nameString;
-    public Image uiImage;
+    public Sprite uiImage;
     public Transform prefab;
     public Transform visual;
     public int x_size;
