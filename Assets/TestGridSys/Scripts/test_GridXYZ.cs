@@ -45,7 +45,7 @@ public class test_GridXYZ
         float blue = 54;
         float alpha = 100;
         Color color = new Color(red / 255f, green / 255f, blue / 255f, alpha /255f);
-        Debug.LogError(color);
+
         sharedMaterial.SetColor("_BaseColor", Color.red);
         sharedMaterial.enableInstancing = true;
 
@@ -97,7 +97,7 @@ public class test_GridXYZ
 
     public test_BaseGrid GetGridObject(int x, int y, int z)
     {
-        if (x>=0 && z>=0 && x < grid_x_lenght && z < grid_z_lenght)
+        if (x>=0 && z>=0 && y>=0 && x < grid_x_lenght && z < grid_z_lenght)
         {
             return gridObjcets[x, y, z];
         }

@@ -71,8 +71,9 @@ public class Slot : MonoBehaviour
     public void ReturnSco()
     {
         GameManager.GetGameManagerInstance.GetGridBuildingSystem.selectedSco = sco;
-        GameManager.GetGameManagerInstance.GetGridBuildingSystem.buildMode = false;
-        GameManager.GetGameManagerInstance.GetGridBuildingSystem.buildMode = true;
+        Destroy(GameManager.GetGameManagerInstance.GetGridBuildingSystem.visualClone);
+        GameManager.GetGameManagerInstance.GetGridBuildingSystem.visualClone = null;
+        GameManager.GetGameManagerInstance.GetGridBuildingSystem.CheckSelectedGridChange(true);
     }
 
     void LerpSlot()

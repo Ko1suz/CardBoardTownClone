@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DortluTunel
   m_EditorClassIdentifier: 
   nameString: TestBuilding
-  uiImage: {fileID: 0}
+  uiImage: {fileID: 21300000, guid: 535a97a28eb358c4abae90fa8a75c7df, type: 3}
   prefab: {fileID: 4009564628146486617, guid: 0f3ad80c734594847a1efb547bc7cdc7, type: 3}
   visual: {fileID: 4994509895245551248, guid: 95790f5b0f55b854fa95fab702521b95, type: 3}
   x_size: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
   lifeSupportMat: 0
   structureMat: 0
   energyMat: 0
-  conductiveMat: 0
+  conductiveMat: 4
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}

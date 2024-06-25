@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Base
   m_EditorClassIdentifier: 
   nameString: TestBuilding
-  uiImage: {fileID: 0}
+  uiImage: {fileID: 21300000, guid: 5ee9707f3669f1841a9a23f3e5e99848, type: 3}
   prefab: {fileID: 2434042180975822837, guid: fb076e8e10c29634f8f21b2861e2f40c, type: 3}
   visual: {fileID: 6529406011660412539, guid: a9aec216646ce2e4292c2d7a8d43b336, type: 3}
   x_size: 1

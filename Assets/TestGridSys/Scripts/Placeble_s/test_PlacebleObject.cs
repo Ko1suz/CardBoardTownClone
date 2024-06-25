@@ -16,6 +16,8 @@ public class test_PlacebleObject : MonoBehaviour
     int dir;
     
     public bool isSquare = false;
+    public bool isBuilding = false;
+    public bool cannotBeBuiltOnTop = false;
 
     [SerializeField] bool thisIsBase = false;
     [SerializeField] bool isConnectionActive = false;
@@ -47,6 +49,8 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.dir = direction;
         test_PlacebleObject.grid = grid;
         test_PlacebleObject.isSquare = test_PlacebleObjectSCO.isSquare;
+        test_PlacebleObject.isBuilding = test_PlacebleObjectSCO.isBuilding;
+        test_PlacebleObject.cannotBeBuiltOnTop = test_PlacebleObjectSCO.cannotBeBuiltOnTop;
         test_PlacebleObject.thisIsBase = test_PlacebleObjectSCO.thisIsBase;
         test_PlacebleObject.gridIndex = gridIndex;
         test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
@@ -88,7 +92,7 @@ public class test_PlacebleObject : MonoBehaviour
                 test_PlacebleObjectSCO.Produce();
                 workOnce = true;
             }
-            else if (timer > test_PlacebleObjectSCO.productionTime)
+            else if (timer > test_PlacebleObjectSCO.productionTime && !workOnce)
             {
                 timer = 0;
                 test_PlacebleObjectSCO.Produce();
@@ -114,7 +118,7 @@ public class test_PlacebleObject : MonoBehaviour
                 GetRotationSideIndex(test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0], cell.isSquareGrid);
 
             connectionGridsRefs[i] = Index;
-            //Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
+            Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
 
             // Baðlantý noktalarýnýn olduðu yönde ki Indexler hesaplanýr
             test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);
@@ -132,17 +136,23 @@ public class test_PlacebleObject : MonoBehaviour
                     for (int j = 0; j < placebleObj.GetConnectionGridRefs().Length; j++)
                     {
                         // objenin baðlantý noktalarýndan birisi bu objeye bakýyor ise
-                        if (placebleObj.GetConnectionGridRefs()[j] == gridIndex)
+
+                        for (int g = 0; g < test_PlacebleObjectSCO.connectionPoints.Length; g++)
                         {
-                            placebleObj.connections[j] = this;
-                            connections[i] = placebleObj;
-                            // ve o obje aktif ise 
-                            if (placebleObj.IsBuildingActive())
+                            Vector3 currentGridIndex = gridIndex + test_PlacebleObjectSCO.connectionPoints[g].connectionPointsPosition[0];
+                            if (placebleObj.GetConnectionGridRefs()[j] == currentGridIndex)
                             {
-                                // baðlantýyý aktif hale getir
-                                isConnectionActive = true;
+                                placebleObj.connections[j] = this;
+                                connections[i] = placebleObj;
+                                // ve o obje aktif ise 
+                                if (placebleObj.IsBuildingActive())
+                                {
+                                    // baðlantýyý aktif hale getir
+                                    isConnectionActive = true;
+                                }
                             }
                         }
+                       
                     }
                 }
             }

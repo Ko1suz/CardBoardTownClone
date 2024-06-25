@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DonusTuneli
   m_EditorClassIdentifier: 
   nameString: TestBuilding
-  uiImage: {fileID: 0}
+  uiImage: {fileID: 21300000, guid: a209a26032de3fd4dbbc3b221c1119b3, type: 3}
   prefab: {fileID: 4039345496162779295, guid: eebbbca6ac76b364397df1d8fff8e2f0, type: 3}
   visual: {fileID: 799451217760699002, guid: f5496cef1041017489d2e9ac71099097, type: 3}
   x_size: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
   lifeSupportMat: 0
   structureMat: 0
   energyMat: 0
-  conductiveMat: 0
+  conductiveMat: 3
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}

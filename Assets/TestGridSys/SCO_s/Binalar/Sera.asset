@@ -13,27 +13,33 @@ MonoBehaviour:
   m_Name: Sera
   m_EditorClassIdentifier: 
   nameString: TestBuilding
-  uiImage: {fileID: 21300000, guid: a18e0f138198489419d20d8ec13f5886, type: 3}
-  prefab: {fileID: 8669275904561259709, guid: cd45e17ef4176d142b43b9978ab6fde1, type: 3}
-  visual: {fileID: 8669275904561259709, guid: 54d95c9617256b84aa221a487af1c5dc, type: 3}
+  uiImage: {fileID: 21300000, guid: d0b72587ed603734582d0a6d28d30add, type: 3}
+  prefab: {fileID: 3583607029351549959, guid: 959c38ddc3c52f848bd9e63c58c56b35, type: 3}
+  visual: {fileID: 1469723582560744883, guid: b4351d32d9ccffd4abd013ec00ec4157, type: 3}
   x_size: 1
   y_size: 1
   z_size: 1
   isSquare: 0
   thisIsBase: 0
   minPlaceIndexs: {x: 0, y: 0, z: 0}
-  maxPlaceIndexs: {x: 99, y: 99, z: 99}
-  lifeSupportMat: 5
-  structureMat: 0
-  energyMat: 0
-  conductiveMat: 5
+  maxPlaceIndexs: {x: 99, y: 3, z: 99}
+  lifeSupportMat: 2
+  structureMat: 1
+  energyMat: 3
+  conductiveMat: 2
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}
-    connectionPointsRotation: 5a000000
+    connectionPointsRotation: 2d000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 87000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: e1000000
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}
     connectionPointsRotation: 3b010000
   produced: 0
   productionValue: 1
-  productionTime: 5
+  productionTime: 12

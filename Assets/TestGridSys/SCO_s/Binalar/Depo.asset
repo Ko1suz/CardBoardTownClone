@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc03598e9e1ac34f80fe9de73bd2c36, type: 3}
+  m_Name: Depo
+  m_EditorClassIdentifier: 
+  nameString: Depo
+  uiImage: {fileID: 21300000, guid: cdeb8103c70553349a0f495b85bef411, type: 3}
+  prefab: {fileID: 1816796465995852231, guid: 81239f49967fcc9419686aa8af0429e4, type: 3}
+  visual: {fileID: 3428144667035666535, guid: a4db135b31f21a84c96308b4ee63e881, type: 3}
+  x_size: 1
+  y_size: 2
+  z_size: 1
+  isSquare: 0
+  thisIsBase: 0
+  minPlaceIndexs: {x: 0, y: 0, z: 0}
+  maxPlaceIndexs: {x: 99, y: 0, z: 99}
+  lifeSupportMat: 3
+  structureMat: 3
+  energyMat: 3
+  conductiveMat: 3
+  connectionPoints:
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 2d000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 87000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: e1000000
+  - connectionPointsPosition:
+    - {x: 0, y: 0, z: 0}
+    connectionPointsRotation: 3b010000
+  - connectionPointsPosition:
+    - {x: 0, y: 1, z: 0}
+    connectionPointsRotation: 00000000
+  - connectionPointsPosition:
+    - {x: 0, y: 1, z: 0}
+    connectionPointsRotation: b4000000
+  produced: 6
+  productionValue: 100
+  productionTime: 0

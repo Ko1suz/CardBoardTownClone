@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UzunTunel
   m_EditorClassIdentifier: 
   nameString: TestBuilding
-  uiImage: {fileID: 0}
+  uiImage: {fileID: 21300000, guid: 2ee218e7aead03548a5d78cfc91f19de, type: 3}
   prefab: {fileID: 5795648472395133581, guid: 683273f3cb692d74e930ca043ffb3cb6, type: 3}
   visual: {fileID: 5795648472395133581, guid: 3822540d1a7986e4e994aa538ebab36d, type: 3}
   x_size: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
   lifeSupportMat: 0
   structureMat: 0
   energyMat: 0
-  conductiveMat: 0
+  conductiveMat: 3
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}

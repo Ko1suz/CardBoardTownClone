@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using CodeMonkey.Utils;
+using UnityEngine.EventSystems;
 
 public class test_GridBuildingSystem : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     public bool buildMode = false;
     public test_PlacebleObjectSCO selectedSco;
-    GameObject visualClone;
+    public GameObject visualClone;
     public int index = 0;
 
     private int[] directions = { 0, 45, 90, 135, 180, 225, 270, 315 };
@@ -61,7 +62,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             selectedZ = z;
         }
     }
-    void CheckSelectedGridChange(bool eventFire = false)
+    public void CheckSelectedGridChange(bool eventFire = false)
     {
         if (eventFire)
         {
@@ -89,48 +90,6 @@ public class test_GridBuildingSystem : MonoBehaviour
             visualClone = null;
             CheckSelectedGridChange(true);
         }
-        if (Input.GetKey(KeyCode.Alpha2))
-        {
-            index = 1;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha3))
-        {
-            index = 2;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha4))
-        {
-            index = 3;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha5))
-        {
-            index = 4;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha6))
-        {
-            index = 5;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
-        if (Input.GetKey(KeyCode.Alpha7))
-        {
-            index = 6;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
@@ -151,10 +110,19 @@ public class test_GridBuildingSystem : MonoBehaviour
 
         Rotate();
     }
+    private bool IsPointerOverUIObject()
+    {
+        // Þu anda üzerine týklanan UI öðelerinin listesini al
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
     void SetBuilding(bool canIPlace)
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0)  && !IsPointerOverUIObject())
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
             //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
@@ -167,7 +135,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                     int xIndex = test_BaseGrid.GetXIndex();
                     int yIndex = test_BaseGrid.GetYIndex();
                     int zIndex = test_BaseGrid.GetZIndex();
-                    //GameObject cloneBuilding = Instantiate(test_PlacebleObjectSOs[index].prefab.gameObject, test_GridXYZ.GetWorldPositionGrid(x, y, z), Quaternion.Euler(0, directionValue, 0));
+
                     test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), new Vector3(xIndex,yIndex,zIndex), directionValue, selectedSco, test_GridXYZ);
 
                     for (int ySize = 0; ySize < selectedSco.y_size; ySize++)
@@ -178,7 +146,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                             {
                                 test_BaseGrid = test_GridXYZ.GetGridObject(x + (xSize), y + (ySize), z + (zSize));
                                 test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
-                                Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x + (xSize), y + (ySize), z + (zSize)));
+                                //Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x + (xSize), y + (ySize), z + (zSize)));
                                 test_PlacebleObjects.Add(cloneBuilding);
                             }
                         }
@@ -216,6 +184,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         CheckBuildingBorders(yIndex) &&
         CheckGridItSelf(xIndex, yIndex, zIndex) &&
         CheckSideGrids(xIndex, yIndex, zIndex) &&
+        CheckUnderGrid(xIndex, yIndex, zIndex) &&
         GameManager.GetGameManagerInstance.CheckBuildingCost(selectedSco, setResources))
         {
             return true;
@@ -308,6 +277,43 @@ public class test_GridBuildingSystem : MonoBehaviour
         //Debug.LogWarning("Boþ alan = " + isPlaceble);
         if (isPlaceble >=4){ return true; }
         else { return false; }
+    }
+
+    bool CheckUnderGrid(int xIndex, int yIndex, int zIndex)
+    {
+        test_BaseGrid gridRef;
+        test_PlacebleObject selectedObj;
+        gridRef = test_GridXYZ.GetGridObject(xIndex, yIndex - 1, zIndex);
+       
+        // eðer iki altýnda olursa ustune obje koyabiliyor duruma geliyor
+
+        if (gridRef == null)
+        {
+            return true;
+        }
+        else
+        {
+            if (gridRef.GetPlacedObjet() != null)
+            {
+                gridRef.GetPlacedObjet().TryGetComponent<test_PlacebleObject>(out test_PlacebleObject s);
+                selectedObj = s;
+                if (selectedObj == null)
+                {
+                    return false;
+                }
+                else if (selectedObj.cannotBeBuiltOnTop)
+                {
+                    return false;
+                }
+                else { return true; }
+            }
+            else
+            {
+                return true;
+            }
+
+
+        }
     }
 
     void SetBuildMode()

@@ -13,19 +13,20 @@ MonoBehaviour:
   m_Name: "K\u0131saTunel"
   m_EditorClassIdentifier: 
   nameString: TestBuilding
-  uiImage: {fileID: 0}
+  uiImage: {fileID: 21300000, guid: 3e411e17077af304e84ba400d504c2ae, type: 3}
   prefab: {fileID: 3245730737890858770, guid: a517bc20e46878a428fc2156106c784b, type: 3}
   visual: {fileID: 3245730737890858770, guid: c81767bd81e907147b016398ed2cc218, type: 3}
   x_size: 1
   y_size: 1
   z_size: 1
   isSquare: 1
+  thisIsBase: 0
   minPlaceIndexs: {x: 0, y: 0, z: 0}
   maxPlaceIndexs: {x: 99, y: 99, z: 99}
   lifeSupportMat: 0
   structureMat: 0
   energyMat: 0
-  conductiveMat: 0
+  conductiveMat: 2
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}

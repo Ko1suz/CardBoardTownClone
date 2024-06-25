@@ -15,7 +15,8 @@ public class UI_BuildingSystem : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.GetGameManagerInstance;
-        CreateBuildingSlots();
+        CreatePlacebleSlots(Buildings);
+        CreatePlacebleSlots(Connections);
     }
 
     // Update is called once per frame
@@ -30,15 +31,40 @@ public class UI_BuildingSystem : MonoBehaviour
         return null;
     }
 
-    public void CreateBuildingSlots()
+    public void CreatePlacebleSlots(test_PlacebleObjectSCO[] buildingType)
     {
-        for (int i = 0; i < Buildings.Length; i++)
+        for (int i = 0; i < buildingType.Length; i++)
         {
             GameObject SlotClone = Instantiate(SlotPrefab);
-            SlotClone.transform.SetParent(BuildingUI_GameObjcet.transform);
+
+            if (buildingType == Buildings){ SlotClone.transform.SetParent(BuildingUI_GameObjcet.transform); }
+            if (buildingType == Connections){ SlotClone.transform.SetParent(ConnectionUI_GameObjcet.transform); }
+            
             SlotClone.transform.localScale = Vector3.one;
-            SlotClone.GetComponent<Slot>().sco = Buildings[i];
-            SlotClone.GetComponent<Slot>().SlotIcon = Buildings[i].uiImage;
+            SlotClone.GetComponent<Slot>().sco = buildingType[i];
+            SlotClone.GetComponent<Slot>().SlotIcon = buildingType[i].uiImage;
         }
     }
+
+    public void CloseAllUIs()
+    {
+        BuildingUI_GameObjcet.SetActive(false);
+        ConnectionUI_GameObjcet.SetActive(false);
+    }
+
+    public void OpenBuildingSlots()
+    {
+        ConnectionUI_GameObjcet.SetActive(false);
+        if (BuildingUI_GameObjcet.activeSelf) { BuildingUI_GameObjcet.SetActive(false); }
+        else { BuildingUI_GameObjcet.SetActive(true); }
+    }
+
+    public void OpenConnectionSlots()
+    {
+        BuildingUI_GameObjcet.SetActive(false);
+        if(ConnectionUI_GameObjcet.activeSelf) { ConnectionUI_GameObjcet.SetActive(false); }
+        else { ConnectionUI_GameObjcet.SetActive(true); }
+    }
+
+
 }
