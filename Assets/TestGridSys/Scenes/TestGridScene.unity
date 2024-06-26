@@ -1005,12 +1005,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: df4573b74017cb647acb7e171d48ff39, type: 2}
   - {fileID: 11400000, guid: 5dd8ad5d2221a1843aa92e914a766ab7, type: 2}
   - {fileID: 11400000, guid: 33edada07eab6e0449e8bdd894b814ea, type: 2}
+  - {fileID: 11400000, guid: a00f947b150e0ca4498b09c213f77c0e, type: 2}
   Connections:
   - {fileID: 11400000, guid: 22f7d2207031d4244b4d57a8013c5c13, type: 2}
   - {fileID: 11400000, guid: cd40b34a58bc94f49a02cfaee2cd8db4, type: 2}
   - {fileID: 11400000, guid: 8766e3e0294ec384d9b13f9a66acf177, type: 2}
   - {fileID: 11400000, guid: 859721dbe9ffc544cb16849fdda21785, type: 2}
   - {fileID: 11400000, guid: 52ed3838d526d0a4b8bf5e0df73e932a, type: 2}
+  - {fileID: 11400000, guid: 9385b34ef0cff2e42b023701b639e49e, type: 2}
   BuildingUI_GameObjcet: {fileID: 768978941}
   ConnectionUI_GameObjcet: {fileID: 848445435}
 --- !u!114 &523289683

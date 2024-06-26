@@ -201,6 +201,10 @@ public class test_GridBuildingSystem : MonoBehaviour
         {
             return false;
         }
+        else if (!gridRef.isSquareGrid && selectedSco.isSquare)
+        {
+            return false;
+        }
         else
         {
             return true;
@@ -248,11 +252,11 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
-            else if (gridRef.CheckPlacedObject() || selectedSco.isSquare)
+            else if (gridRef.CheckPlacedObject() || !selectedSco.isBuilding)
             {
                 isPlaceble++;
             }
-            else if (gridRef.GetPlacedObjet().GetComponent<test_PlacebleObject>().isSquare)
+            else if (!gridRef.GetPlacedObjet().GetComponent<test_PlacebleObject>().isBuilding)
             {
                 isPlaceble++;
             }
@@ -265,11 +269,11 @@ public class test_GridBuildingSystem : MonoBehaviour
             {
                 isPlaceble++;
             }
-            else if (gridRef.CheckPlacedObject() || selectedSco.isSquare)
+            else if (gridRef.CheckPlacedObject() || !selectedSco.isBuilding)
             {
                 isPlaceble++;
             }
-            else if (gridRef.GetPlacedObjet().GetComponent<test_PlacebleObject>().isSquare)
+            else if (!gridRef.GetPlacedObjet().GetComponent<test_PlacebleObject>().isBuilding)
             {
                 isPlaceble++;
             }
@@ -428,6 +432,15 @@ public class test_GridBuildingSystem : MonoBehaviour
             UtilsClass.CreateWorldTextPopup("Direction ->" + directions[directionindex], CM_Testing.GetMousePos3D(), 12);
         }
     }
+
+    //void AtuoRotateConnectionObjs()
+    //{
+    //    if (!selectedSco.isBuilding && buildMode)
+    //    {
+    //        test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+    //        test_BaseGrid gridRef = test_GridXYZ.GetGridObject(x, y, z);
+    //    }
+    //}
 }
 
 #if UNITY_EDITOR

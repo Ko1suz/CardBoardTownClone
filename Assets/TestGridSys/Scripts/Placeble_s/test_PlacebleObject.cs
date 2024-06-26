@@ -118,7 +118,7 @@ public class test_PlacebleObject : MonoBehaviour
                 GetRotationSideIndex(test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0], cell.isSquareGrid);
 
             connectionGridsRefs[i] = Index;
-            Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
+            //Debug.LogError("Kontrol edilen baðlantý noktasý " + Index);
 
             // Baðlantý noktalarýnýn olduðu yönde ki Indexler hesaplanýr
             test_BaseGrid gridObj = grid.GetGridObject((int)Index.x, (int)Index.y, (int)Index.z);

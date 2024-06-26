@@ -20,7 +20,7 @@ MonoBehaviour:
   y_size: 3
   z_size: 1
   isSquare: 0
-  isBuilding: 0
+  isBuilding: 1
   cannotBeBuiltOnTop: 0
   thisIsBase: 0
   minPlaceIndexs: {x: 0, y: 0, z: 0}

@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebc03598e9e1ac34f80fe9de73bd2c36, type: 3}
-  m_Name: "SilikonFabrikas\u0131"
+  m_Name: "Yar\u0131mDonusTuneli"
   m_EditorClassIdentifier: 
-  nameString: "Terra Madenci Kaps\xFCl\xFC"
-  uiImage: {fileID: 21300000, guid: 80ae84c43bcfa2e489056e5daa776cc9, type: 3}
-  prefab: {fileID: 2233843141508845919, guid: a76bd53f81807e947b9a871572cb8496, type: 3}
-  visual: {fileID: 8669275904561259709, guid: 54d95c9617256b84aa221a487af1c5dc, type: 3}
+  nameString: "Yar\u0131mDonus"
+  uiImage: {fileID: 21300000, guid: 6f01a6275890e4048b82ae36fe9b1de0, type: 3}
+  prefab: {fileID: 1037036684219582618, guid: 1d1d7d0da255af442803273901e00ae0, type: 3}
+  visual: {fileID: 2951482977916711851, guid: 31a4e28bd976bd04e9a530d37e6c9cfe, type: 3}
   x_size: 1
   y_size: 1
   z_size: 1
   isSquare: 0
-  isBuilding: 1
+  isBuilding: 0
   cannotBeBuiltOnTop: 0
   thisIsBase: 0
   minPlaceIndexs: {x: 0, y: 0, z: 0}
   maxPlaceIndexs: {x: 99, y: 99, z: 99}
-  lifeSupportMat: 1
-  structureMat: 2
-  energyMat: 3
-  conductiveMat: 1
+  lifeSupportMat: 0
+  structureMat: 0
+  energyMat: 0
+  conductiveMat: 3
   connectionPoints:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}
@@ -36,6 +36,6 @@ MonoBehaviour:
   - connectionPointsPosition:
     - {x: 0, y: 0, z: 0}
     connectionPointsRotation: 3b010000
-  produced: 3
+  produced: 7
   productionValue: 1
   productionTime: 12

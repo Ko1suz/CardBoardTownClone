@@ -20,6 +20,8 @@ MonoBehaviour:
   y_size: 2
   z_size: 1
   isSquare: 0
+  isBuilding: 1
+  cannotBeBuiltOnTop: 0
   thisIsBase: 1
   minPlaceIndexs: {x: 0, y: 0, z: 0}
   maxPlaceIndexs: {x: 99, y: 99, z: 99}
