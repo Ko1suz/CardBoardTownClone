@@ -57,6 +57,8 @@ public class UI_BuildingSystem : MonoBehaviour
         ConnectionUI_GameObjcet.SetActive(false);
         if (BuildingUI_GameObjcet.activeSelf) { BuildingUI_GameObjcet.SetActive(false); }
         else { BuildingUI_GameObjcet.SetActive(true); }
+
+        CheckUIObjcets();
     }
 
     public void OpenConnectionSlots()
@@ -64,6 +66,21 @@ public class UI_BuildingSystem : MonoBehaviour
         BuildingUI_GameObjcet.SetActive(false);
         if(ConnectionUI_GameObjcet.activeSelf) { ConnectionUI_GameObjcet.SetActive(false); }
         else { ConnectionUI_GameObjcet.SetActive(true); }
+
+        CheckUIObjcets();
+    }
+
+    public void CheckUIObjcets()
+    {
+        if (!ConnectionUI_GameObjcet.activeSelf && !BuildingUI_GameObjcet.activeSelf)
+        {
+            gameManager.GetGridBuildingSystem.buildMode = false;
+            gameManager.GetGridBuildingSystem.selectedSco = null;
+        }
+        else if(ConnectionUI_GameObjcet.activeSelf || BuildingUI_GameObjcet.activeSelf)
+        {
+            gameManager.GetGridBuildingSystem.buildMode = true;
+        }
     }
 
 

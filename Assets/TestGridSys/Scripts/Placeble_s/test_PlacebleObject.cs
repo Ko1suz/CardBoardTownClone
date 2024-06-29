@@ -24,6 +24,7 @@ public class test_PlacebleObject : MonoBehaviour
 
     Vector3[] connectionGridsRefs;
     test_PlacebleObject[] connections;
+    GameObject[] connectionColliders;
     [HideInInspector] public Vector3[] GetConnectionGridRefs() { return connectionGridsRefs; }
     public bool IsThisBase { get => thisIsBase;}
 
@@ -56,6 +57,7 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
         test_PlacebleObject.connections = new test_PlacebleObject[test_PlacebleObjectSCO.connectionPoints.Length];
         test_PlacebleObject.CheckConnectionGrid();
+        test_PlacebleObject.CreateConnetionSideCollider();
 
         return test_PlacebleObject;
     }
@@ -274,6 +276,59 @@ public class test_PlacebleObject : MonoBehaviour
                     return new Vector3(0, 0, 0);
             }
         }  
+    }
+
+    public void CreateConnetionSideCollider()
+    {
+        for (int i = 0; i < test_PlacebleObjectSCO.connectionPoints.Length; i++)
+        {
+            GameObject colliderObj = new GameObject();
+            colliderObj.AddComponent<BoxCollider>();
+            colliderObj.transform.localScale = new Vector3(0.85f, 0.85f, 0.85f);
+            colliderObj.transform.SetParent(transform);
+            colliderObj.transform.localPosition = Vector3.zero;
+            colliderObj.layer = 6;
+
+            float yPos = 0.5f + test_PlacebleObjectSCO.connectionPoints[i].connectionPointsPosition[0].y;
+            switch (test_PlacebleObjectSCO.connectionPoints[i].connectionPointsRotation[0])
+            {
+                case 0:
+                    colliderObj.transform.localPosition = new Vector3(0, yPos, -1.3f);
+                    break;
+                case 45:
+                    colliderObj.transform.localPosition = new Vector3(-0.85f, yPos, -0.85f);
+                    colliderObj.transform.rotation = Quaternion.Euler(0,45,0); 
+                    break;
+                case 90:
+                    colliderObj.transform.localPosition = new Vector3(-1.3f, yPos, 0);
+                    break;
+                case 135:
+                    if (isSquare) { colliderObj.transform.localPosition = new Vector3(-0.85f/2, yPos, 0.85f/2); }
+                    else { colliderObj.transform.localPosition = new Vector3(-0.85f, yPos, 0.85f); }
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 45, 0);
+                    break;
+                case 180:
+                    colliderObj.transform.localPosition = new Vector3(0, yPos, 1.3f);
+                    break;
+                case 225:
+                    colliderObj.transform.localPosition = new Vector3(0.85f, yPos, 0.85f);
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 45, 0);
+                    break;
+                case 270:
+                    colliderObj.transform.localPosition = new Vector3(1.3f, yPos, 0);
+                    break;
+                case 315:
+                    if (isSquare) { colliderObj.transform.localPosition = new Vector3(0.85f / 2, yPos, -0.85f / 2); }
+                    else { colliderObj.transform.localPosition = new Vector3(0.85f, yPos, -0.85f); }
+
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 45, 0);
+                    break;
+                default:
+                    colliderObj.transform.localPosition = new Vector3(0, yPos, -1.3f);
+                    break;
+            }
+        }
+       
     }
 
 

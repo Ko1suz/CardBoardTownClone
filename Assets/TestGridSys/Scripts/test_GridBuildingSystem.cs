@@ -24,8 +24,8 @@ public class test_GridBuildingSystem : MonoBehaviour
     public int z;
     [Range(1, 10)]
     public int gridCellSize;
-
     public Vector3 gridPosition;
+    public Material GridLineMat;
     test_GridXYZ test_GridXYZ;
     public test_GridXYZ GetGridXYZ { get => test_GridXYZ; }
 
@@ -72,24 +72,28 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     void Start()
     {
-        test_GridXYZ = new test_GridXYZ(x, y, z, gridCellSize, gridPosition);
+        test_GridXYZ = new test_GridXYZ(x, y, z, gridCellSize, gridPosition, GridLineMat);
         OnSelectingGridChange += CheckConditons;
         materialSetter = GetComponent<MaterialSetter>();
     }
 
     private void Update()
     {
-        CheckSelectedGridChange();
+        if (selectedSco != null && buildMode)
+        {
+            CheckSelectedGridChange();
+        }
+       
         SetBuildMode();
         BuildingGhost();
-        SetBuilding(canIplace);
-        if (Input.GetKey(KeyCode.Alpha1))
-        {
-            index = 0;
-            Destroy(visualClone);
-            visualClone = null;
-            CheckSelectedGridChange(true);
-        }
+        SetBuilding(canIplace && selectedSco != null && buildMode);
+        //if (Input.GetKey(KeyCode.Alpha1))
+        //{
+        //    index = 0;
+        //    Destroy(visualClone);
+        //    visualClone = null;
+        //    CheckSelectedGridChange(true);
+        //}
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
@@ -340,7 +344,7 @@ public class test_GridBuildingSystem : MonoBehaviour
 
     void BuildingGhost()
     {
-        if (buildMode)
+        if (buildMode && selectedSco != null)
         {
             test_BaseGrid gridRef = GetMousePosGrid();
 
@@ -376,7 +380,11 @@ public class test_GridBuildingSystem : MonoBehaviour
                     //SetBuilding(false);
                 }
             }
-          
+        }
+        else
+        {
+            Destroy(visualClone);
+            visualClone = null;
         }
     }
     public void CheckConditons(object sender, EventArgs e)
