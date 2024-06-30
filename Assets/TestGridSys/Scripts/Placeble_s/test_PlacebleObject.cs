@@ -56,8 +56,9 @@ public class test_PlacebleObject : MonoBehaviour
         test_PlacebleObject.gridIndex = gridIndex;
         test_PlacebleObject.gridIndex_s = new Vector3[test_PlacebleObjectSCO.x_size * test_PlacebleObjectSCO.y_size * test_PlacebleObjectSCO.z_size];
         test_PlacebleObject.connections = new test_PlacebleObject[test_PlacebleObjectSCO.connectionPoints.Length];
+        //test_PlacebleObject.connectionColliders = new GameObject[test_PlacebleObjectSCO.connectionPoints.Length];
         test_PlacebleObject.CheckConnectionGrid();
-        test_PlacebleObject.CreateConnetionSideCollider();
+        //test_PlacebleObject.CreateConnetionSideCollider();
 
         return test_PlacebleObject;
     }
@@ -192,6 +193,7 @@ public class test_PlacebleObject : MonoBehaviour
                 {
                     test_BaseGrid = grid.GetGridObject((int)gridIndex.x + (xSize), (int)gridIndex.y + (ySize), (int)gridIndex.z + (zSize));
                     Destroy(test_BaseGrid.ClearPlacedObjcet());
+                    GameManager.GetGameManagerInstance.GetGridBuildingSystem.test_PlacebleObjects.Remove(this);
                 }
             }
         }
@@ -284,7 +286,7 @@ public class test_PlacebleObject : MonoBehaviour
         {
             GameObject colliderObj = new GameObject();
             colliderObj.AddComponent<BoxCollider>();
-            colliderObj.transform.localScale = new Vector3(0.85f, 0.85f, 0.85f);
+            colliderObj.transform.localScale = new Vector3(0.5f, 0.5f, 0.85f);
             colliderObj.transform.SetParent(transform);
             colliderObj.transform.localPosition = Vector3.zero;
             colliderObj.layer = 6;
@@ -301,14 +303,16 @@ public class test_PlacebleObject : MonoBehaviour
                     break;
                 case 90:
                     colliderObj.transform.localPosition = new Vector3(-1.3f, yPos, 0);
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 90, 0);
                     break;
                 case 135:
                     if (isSquare) { colliderObj.transform.localPosition = new Vector3(-0.85f/2, yPos, 0.85f/2); }
                     else { colliderObj.transform.localPosition = new Vector3(-0.85f, yPos, 0.85f); }
-                    colliderObj.transform.rotation = Quaternion.Euler(0, 45, 0);
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 135, 0);
                     break;
                 case 180:
                     colliderObj.transform.localPosition = new Vector3(0, yPos, 1.3f);
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 180, 0);
                     break;
                 case 225:
                     colliderObj.transform.localPosition = new Vector3(0.85f, yPos, 0.85f);
@@ -316,17 +320,19 @@ public class test_PlacebleObject : MonoBehaviour
                     break;
                 case 270:
                     colliderObj.transform.localPosition = new Vector3(1.3f, yPos, 0);
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 90, 0);
                     break;
                 case 315:
                     if (isSquare) { colliderObj.transform.localPosition = new Vector3(0.85f / 2, yPos, -0.85f / 2); }
                     else { colliderObj.transform.localPosition = new Vector3(0.85f, yPos, -0.85f); }
-
-                    colliderObj.transform.rotation = Quaternion.Euler(0, 45, 0);
+                    colliderObj.transform.rotation = Quaternion.Euler(0, 135, 0);
                     break;
                 default:
                     colliderObj.transform.localPosition = new Vector3(0, yPos, -1.3f);
                     break;
             }
+
+            connectionColliders[i] = colliderObj;
         }
        
     }

@@ -46,6 +46,32 @@ public class CM_Testing : MonoBehaviour
         }
     }
 
+    public static Vector3 GetMousePos3D(LayerMask layerMask)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, layerMask))
+        {
+            return raycastHit.point;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    public static GameObject GetRaycastHitObject(LayerMask layerMask)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, layerMask))
+        {
+            return raycastHit.collider.gameObject;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 
     public static Vector3 GetMousePos2D()
     {

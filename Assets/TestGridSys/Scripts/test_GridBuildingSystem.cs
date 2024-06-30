@@ -29,6 +29,8 @@ public class test_GridBuildingSystem : MonoBehaviour
     test_GridXYZ test_GridXYZ;
     public test_GridXYZ GetGridXYZ { get => test_GridXYZ; }
 
+    public LayerMask IgnoreLayer;
+    public LayerMask ConnectionLayer;
     public bool buildMode = false;
     public test_PlacebleObjectSCO selectedSco;
     public GameObject visualClone;
@@ -76,7 +78,7 @@ public class test_GridBuildingSystem : MonoBehaviour
         OnSelectingGridChange += CheckConditons;
         materialSetter = GetComponent<MaterialSetter>();
     }
-
+   
     private void Update()
     {
         if (selectedSco != null && buildMode)
@@ -87,29 +89,24 @@ public class test_GridBuildingSystem : MonoBehaviour
         SetBuildMode();
         BuildingGhost();
         SetBuilding(canIplace && selectedSco != null && buildMode);
-        //if (Input.GetKey(KeyCode.Alpha1))
-        //{
-        //    index = 0;
-        //    Destroy(visualClone);
-        //    visualClone = null;
-        //    CheckSelectedGridChange(true);
-        //}
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y - 1, z);
-            if(!test_BaseGrid.CanBuild())
+            GameObject deletedObjcet = GetRaycastHitObject();
+            if (deletedObjcet != null)
             {
-                //Destroy(test_BaseGrid.ClearPlacedObjcet());
-                test_PlacebleObject objRef = test_BaseGrid.GetPlacedObjet().GetComponent<test_PlacebleObject>();
-                test_PlacebleObjects.Remove(objRef);
-                objRef.DestroySelf();
+                test_PlacebleObject objRef = deletedObjcet.GetComponentInParent<test_PlacebleObject>();
+                test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject((int)objRef.GetGridIndex.x, (int)objRef.GetGridIndex.y, (int)objRef.GetGridIndex.z);
+                if (!test_BaseGrid.CanBuild())
+                {
+                    test_PlacebleObjects.Remove(objRef);
+                    objRef.DestroySelf();
+                }
+                else
+                {
+                    UtilsClass.CreateWorldTextPopup("Burada kurulu bir sey yok :D?", CM_Testing.GetMousePos3D(), 5);
+                }
             }
-            else
-            {
-                UtilsClass.CreateWorldTextPopup("Burada kurulu bir þey yok :D?", CM_Testing.GetMousePos3D(), 5);
-            }
-
         }
 
         Rotate();
@@ -128,19 +125,37 @@ public class test_GridBuildingSystem : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0)  && !IsPointerOverUIObject())
         {
-            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-            //test_GridXYZ.GetGridXYZOctagon(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+            //int outX;
+            //int outY;
+            //int outZ;
+            //if (selectedSco.isBuilding)
+            //{
+            //    test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
+            //    outX = x;
+            //    outY = y;
+            //    outZ = z;
+            //}
+            //else
+            //{
+            //    // colliderlara script atabilirsin içinde tuttugu ýndex olabýlýr ve rotasyon oldugunda bu ýndex deðiþtirilebilir falan olsun of amk yoruldum
+            //    Debug.Log("Baðlantý noktasý");
+            //    Vector3 ConnectionIndex = CM_Testing.GetRaycastHitObject(ConnectionLayer).GetComponentInParent<test_PlacebleObject>().GetGridIndex;
+            //    outX = (int)ConnectionIndex.x;
+            //    outY = (int)ConnectionIndex.y;
+            //    outZ = (int)ConnectionIndex.z;
+            //}
 
+            test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int outX, out int outY, out int outZ);
             if (x >= 0 && canIPlace && buildMode)
             {
-                test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
-                if (CheckAllConditions(x,y,z, true))
+                test_BaseGrid test_BaseGrid = test_GridXYZ.GetGridObject(outX, outY, outZ);
+                if (CheckAllConditions(outX, outY, outZ, true))
                 {
                     int xIndex = test_BaseGrid.GetXIndex();
                     int yIndex = test_BaseGrid.GetYIndex();
                     int zIndex = test_BaseGrid.GetZIndex();
 
-                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(x, y, z), new Vector3(xIndex,yIndex,zIndex), directionValue, selectedSco, test_GridXYZ);
+                    test_PlacebleObject cloneBuilding = test_PlacebleObject.Create(test_GridXYZ.GetWorldPositionGrid(outX, outY, outZ), new Vector3(xIndex,yIndex,zIndex), directionValue, selectedSco, test_GridXYZ);
 
                     for (int ySize = 0; ySize < selectedSco.y_size; ySize++)
                     {
@@ -148,7 +163,7 @@ public class test_GridBuildingSystem : MonoBehaviour
                         {
                             for (int xSize = 0; xSize < selectedSco.x_size; xSize++)
                             {
-                                test_BaseGrid = test_GridXYZ.GetGridObject(x + (xSize), y + (ySize), z + (zSize));
+                                test_BaseGrid = test_GridXYZ.GetGridObject(outX + (xSize), outY + (ySize), outZ + (zSize));
                                 test_BaseGrid.SetPlacedObject(cloneBuilding.transform);
                                 //Debug.Log(string.Format("pozisyonun x y z deðerleri {0},{1},{2}", x + (xSize), y + (ySize), z + (zSize)));
                                 test_PlacebleObjects.Add(cloneBuilding);
@@ -172,8 +187,8 @@ public class test_GridBuildingSystem : MonoBehaviour
     {
         test_BaseGrid test_BaseGrid = null;
 
-        test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(), out int x, out int y, out int z);
-        if (x>=0)
+        test_GridXYZ.GetGridIndexAtWorldPosition(CM_Testing.GetMousePos3D(IgnoreLayer), out int x, out int y, out int z);
+        if (x>=0 && y>=0 && z>=0)
         {
             test_BaseGrid = test_GridXYZ.GetGridObject(x, y, z);
         }
@@ -401,6 +416,21 @@ public class test_GridBuildingSystem : MonoBehaviour
         else
         {
             canIplace = true;
+        }
+    }
+
+    public GameObject GetRaycastHitObject()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit))
+        {
+            Debug.Log("çarptý");
+            return raycastHit.collider.gameObject;
+        }
+        else
+        {
+            Debug.Log("çarpmadý");
+            return null;
         }
     }
 
