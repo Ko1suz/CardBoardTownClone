@@ -86,7 +86,7 @@ public class test_GridBuildingSystem : MonoBehaviour
             CheckSelectedGridChange();
         }
        
-        SetBuildMode();
+        //SetBuildMode();
         BuildingGhost();
         SetBuilding(canIplace && selectedSco != null && buildMode);
 
